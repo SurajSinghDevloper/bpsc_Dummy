@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import { getCookie } from "../Configuration/Cookies";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -12,7 +12,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         if (token) {
           return <Component {...props.children} />;
         } else {
-          return <Redirect to="/" />;
+          return <Link to="/" />;
         }
       }}
     />
