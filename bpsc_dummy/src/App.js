@@ -6,6 +6,7 @@ import { isUserLoggedIn } from "./Actions/SignIn";
 import PrivateRoute from "./Hoc/PrivateRoute";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import './App.css'
+import Registration from "./Components/Registration";
 
 const App = () => {
   const auth = useSelector((state) => {
@@ -24,6 +25,7 @@ const App = () => {
     <Router>
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route path='/registration' component={Registration}/>
         <PrivateRoute
           path="/dashboard"
           component={Dashboard}
