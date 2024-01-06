@@ -8,6 +8,7 @@ const Registration = () => {
         firstName: '',
         middleName: '',
         lastName: '',
+        dob: '',
         email: '',
         password: '',
     });
@@ -27,29 +28,30 @@ const Registration = () => {
         // You can redirect or perform further actions after submission
     };
 
-   
+
 
     const openOTPModal = () => {
-      setIsOTPModalOpen(true);
+        setIsOTPModalOpen(true);
     };
-  
+
     const closeOTPModal = () => {
-      setIsOTPModalOpen(false);
+        setIsOTPModalOpen(false);
     };
     return (
         <Layout>
 
             <div className="relative flex items-center h-screen  bg-blue-100 justify-center">
-                <div className="flex flex-col lg:flex-row items-center bg-white rounded-lg shadow-xl p-12">
-                    <img src={SignupSVG} alt="Signup" className="w-2/5 h-2/5  " />
-                    <div className="w-full h-2/5  ">
-                        <h2 className="text-3xl font-bold text-gray-800 text-center">Sign up</h2>
-                        <p className="mt-2 text-sm text-gray-600 text-center">
+                <div className="flex flex-col lg:flex-row items-center p-8">
+                    <img src={SignupSVG} alt="Signup" className="w-1/2  mr-20 " />
+                    <div className="w-full h-4/6 bg-blue-500 p-8">
+                        <h2 className="text-4xl font-bold text-white text-center">Sign up</h2>
+                        <hr className='font-bold text-white w-1/2 ml-28 p-2' />
+                        <p className="mt-2 text-md text-white text-center">
                             Create an account to get started
                         </p>
-                        <form className="mt-6 space-y-4 w-full" onSubmit={handleSubmit}>
+                        <form className="mt-6 space-y-4 p-8 w-full bg-blue-500" onSubmit={handleSubmit}>
                             {/* ... Input fields */}
-                            <div className="space-y-3">
+                            <div className="space-y-8">
                                 <div className='flex justify-center items-center '>
                                     <label htmlFor="firstName" className="sr-only">
                                         First Name
@@ -62,7 +64,7 @@ const Registration = () => {
                                         required
                                         value={formData.firstName}
                                         onChange={handleInputChange}
-                                        className="block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
+                                        className="block mr-2 w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
                                         placeholder="First Name"
                                     />
                                     <label htmlFor="middleName" className="sr-only">
@@ -76,7 +78,7 @@ const Registration = () => {
                                         required
                                         value={formData.middleName}
                                         onChange={handleInputChange}
-                                        className="block w-full ml-2 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
+                                        className="block w-full mr-2 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
                                         placeholder="Middle Name"
                                     />
                                     <label htmlFor="lastName" className="sr-only">
@@ -96,7 +98,7 @@ const Registration = () => {
                                 </div>
                                 <div className='flex justify-center items-center '>
                                     <label htmlFor="email" className="sr-only">
-                                       E-mail
+                                        E-mail
                                     </label>
                                     <input
                                         id="email"
@@ -112,7 +114,7 @@ const Registration = () => {
                                 </div>
                                 <div className='flex justify-center items-center '>
                                     <label htmlFor="mobile" className="sr-only">
-                                       Mobile
+                                        Mobile
                                     </label>
                                     <input
                                         id="mobile"
@@ -127,8 +129,8 @@ const Registration = () => {
                                     />
                                 </div>
                                 <div className='flex justify-center items-center '>
-                                    <label htmlFor="dob" className="text-opacity-50 text-gray-800 w-1/2 p-2">
-                                       Date Of Birth
+                                    <label htmlFor="dob" className="text-white cursor-pointer w-1/2 p-2" title="Once entered, Date of Birth cannot be changed">
+                                        Date Of Birth*
                                     </label>
                                     <input
                                         id="dob"
@@ -144,7 +146,7 @@ const Registration = () => {
                                 </div>
                                 <div className='flex justify-center items-center '>
                                     <label htmlFor="password" className="sr-only">
-                                       Password
+                                        Password
                                     </label>
                                     <input
                                         id="password"
@@ -162,7 +164,7 @@ const Registration = () => {
                             </div>
                             <div className="w-full">
                                 <button
-                                onClick={openOTPModal}
+                                    onClick={openOTPModal}
                                     type="submit"
                                     className="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
                                 >

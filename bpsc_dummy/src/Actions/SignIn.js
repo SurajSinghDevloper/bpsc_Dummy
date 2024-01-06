@@ -12,18 +12,18 @@ export const login = (user) => {
     dispatch({ type: authConstant.LOGIN_REQUEST });
 
     try {
-      const res = await RouteTo.post(`/user/login`, { ...user });
-
+      const res = await RouteTo.post(`/api/v1/auth/login`, { ...user });
+      console.log(res)
       if (res.status === 200) {
-        const { token, user } = res.data;
-        const userJson = user;
+        const { token, userDetails } = res.data;
+        const userJson = userDetails;
         localStorage.setItem("user", JSON.stringify(userJson));
 
         setCookie("token", "Bearer " + token, 1);
-        setUserCookie("user", user, 1);
+        setUserCookie("userDetails", userDetails, 1);
         dispatch({
           type: authConstant.LOGIN_SUCCESS,
-          payload: { token, user },
+          payload: { token, userDetails },
         });
       } else {
         dispatch({

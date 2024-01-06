@@ -1,13 +1,13 @@
 import { combineReducers } from "redux";
-import authReducer from "./AuthReducer";
-import userReducer from "./UserReducer";
+import login from "./Login";
+import registration from "./Registration";
 import userUpdate from "./UpdateUserReducer";
 import updateUserImg from "./UpdateProfileImgReducer";
 
 
 const rootReducer = combineReducers({
-  auth: authReducer,
-  user: userReducer,
+  auth: login,
+  user: registration,
   updateUser: userUpdate,
   updateUserImg: updateUserImg,
 

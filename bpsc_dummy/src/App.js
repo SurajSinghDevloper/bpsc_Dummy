@@ -7,6 +7,7 @@ import PrivateRoute from "./Hoc/PrivateRoute";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import './App.css'
 import Registration from "./Components/Registration";
+import ContactUs from "./Components/ContactUs";
 
 const App = () => {
   const auth = useSelector((state) => {
@@ -26,6 +27,7 @@ const App = () => {
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path='/registration' component={Registration}/>
+        <Route path='/contact' component={ContactUs}/>
         <PrivateRoute
           path="/dashboard"
           component={Dashboard}

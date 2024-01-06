@@ -4,12 +4,16 @@ import containerLogo from '../Assets/login-box-bg.jpg'
 import loginLogo from '../Assets/login-heading-icon.png'
 import refreshLogo from '../Assets/pngegg.png'
 import { useHistory } from 'react-router-dom';
+import { login } from "../Actions/SignIn"; 
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min'
 
 const Home = (porps) => {
   const history = useHistory();
-  const [username, setUsername] = useState('');
+  const [emailID, setemailID] = useState('');
   const [password, setPassword] = useState('');
-
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const handleRedirect = (destination) => {
     // Redirect to the '/registration' route
     if(destination ==='registration'){
@@ -17,17 +21,37 @@ const Home = (porps) => {
     }
     
   };
+  const handleAuth = () => {
+    if (auth.authenticate === true) {
+      return <Redirect to="/dashboard" />;
+    } else {
+      return null; // Return null if no redirection is required
+    }
+  };
 
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+    setemailID(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    const user = { emailID, password };
+    try {
+      if (emailID !== "" || password !== "") {
+        await dispatch(login(user));
+      } else {
+        // Alert("All Fields Are Important");
+        console.log("Something went wrong")
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    // onClose();
     // Implement your login logic here using 'username' and 'password'
     console.log('Login Clicked');
   };
@@ -54,7 +78,7 @@ const Home = (porps) => {
           </div>
           <p className=' text-white font-light text-base'>Provide your User Name and Password to Login</p>
 
-          <form onSubmit={handleSubmit} className='bg-blue-500 justify-center h-64 '>
+          <form  className='bg-blue-500 justify-center h-64 '>
             <div className='p-2'>
               <div className="field-row bg-blue-500 p-2">
 
@@ -62,7 +86,7 @@ const Home = (porps) => {
                   className='rounded-md p-2 w-full'
                   type="text"
                   placeholder="Username"
-                  value={username}
+                  value={emailID}
                   onChange={handleUsernameChange}
                   required
                 />
@@ -88,11 +112,12 @@ const Home = (porps) => {
 
             <div className=" bg-blue-500 flex justify-between">
               <a href='/' className='text-white p-1 cursor-pointer mt-3'>Forgot Username & Password </a>
-              <button type="submit" className="w-4/12 mt-1 p-2 rounded-xl bg-gradient-to-b from-yellow-400 to-orange-500  text-white cursor-pointer">
+              <button onClick={handleSubmit} className="w-4/12 mt-1 p-2 rounded-xl bg-gradient-to-b from-yellow-400 to-orange-500  text-white cursor-pointer">
                 Log In
               </button>
             </div>
           </form>
+          {handleAuth()}
         </div>
       </div>
     </Layout>
