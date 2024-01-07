@@ -2,17 +2,25 @@ import React, { useState } from 'react';
 import Layout from './LandingPages/Layout'
 import SignupSVG from '../Assets/SignupSVG.svg'
 import OTPModal from './OTPModal';
+import { useDispatch } from "react-redux";
+import { signup } from '../Actions/Registration';
+import { sendOtp } from '../Actions/SendOtpAction';
+import { useHistory } from 'react-router-dom';
+
 const Registration = () => {
     const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
+    const [signupDisabled, setSignupDisabled] = useState(true);
+    const history = useHistory();
     const [formData, setFormData] = useState({
         firstName: '',
         middleName: '',
         lastName: '',
         dob: '',
-        email: '',
+        emailID: '',
+        mobileNo:'',
         password: '',
     });
-
+    const dispatch = useDispatch();
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -21,9 +29,15 @@ const Registration = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Add your form submission logic here
+        if (formData.firstName !== "" || formData.middleName !== "" || formData.lastName !== "" || formData.emailID !== "" || formData.mobileNo !== "" || formData.dob !== "" || formData.password !== "") {
+            dispatch(signup(formData));
+            history.push('/');
+        }
+        else {
+            alert("All Fields are Mandatory !")
+        }
         console.log('Form submitted:', formData);
         // You can redirect or perform further actions after submission
     };
@@ -37,6 +51,21 @@ const Registration = () => {
     const closeOTPModal = () => {
         setIsOTPModalOpen(false);
     };
+
+    const sendOTP = async () => {
+        try {
+           dispatch(sendOtp(formData.emailID))
+           setSignupDisabled(false);
+         
+        } catch (error) {
+          console.error('Error sending OTP:', error);
+          // Handle error accordingly (e.g., display a message to the user)
+        }
+    };
+    const handleVerifyClick = () => {
+        openOTPModal(); // Open OTP Modal
+        sendOTP(); // Send OTP
+      };
     return (
         <Layout>
 
@@ -101,28 +130,29 @@ const Registration = () => {
                                         E-mail
                                     </label>
                                     <input
-                                        id="email"
-                                        name="email"
+                                        id="emailID"
+                                        name="emailID"
                                         type="text"
-                                        autoComplete="email"
+                                        autoComplete="emailID"
                                         required
-                                        value={formData.email}
+                                        value={formData.emailID}
                                         onChange={handleInputChange}
                                         className="block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
                                         placeholder="E-mail"
                                     />
+                                    <button onClick={handleVerifyClick} className='p-2 w-20 border rounded-md text-white ml-3 hover:bg-slate-600 border-rose-50'>Verify</button>
                                 </div>
                                 <div className='flex justify-center items-center '>
                                     <label htmlFor="mobile" className="sr-only">
                                         Mobile
                                     </label>
                                     <input
-                                        id="mobile"
-                                        name="mobile"
+                                        id="mobileNo"
+                                        name="mobileNo"
                                         type="text"
-                                        autoComplete="mobile"
+                                        autoComplete="mobileNo"
                                         required
-                                        value={formData.mobile}
+                                        value={formData.mobileNo||""}
                                         onChange={handleInputChange}
                                         className="block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
                                         placeholder="Mobile"
@@ -164,15 +194,17 @@ const Registration = () => {
                             </div>
                             <div className="w-full">
                                 <button
-                                    onClick={openOTPModal}
                                     type="submit"
-                                    className="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                                    disabled={signupDisabled}
+                                    className={`w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${signupDisabled ? 'bg-gray-400' : 'bg-yellow-500 hover:bg-yellow-600'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500`}
+
+                                    // className="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
                                 >
                                     Sign up
                                 </button>
                             </div>
                         </form>
-                        <OTPModal isOpen={isOTPModalOpen} onClose={closeOTPModal} />
+                        <OTPModal isOpen={isOTPModalOpen} onClose={closeOTPModal} emailID={formData.emailID}/>
                     </div>
                 </div>
             </div>

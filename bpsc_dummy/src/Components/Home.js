@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from './LandingPages/Layout'
 import containerLogo from '../Assets/login-box-bg.jpg'
 import loginLogo from '../Assets/login-heading-icon.png'
 import refreshLogo from '../Assets/pngegg.png'
 import { useHistory } from 'react-router-dom';
-import { login } from "../Actions/SignIn"; 
+import { login } from "../Actions/SignIn";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min'
+import TextToImage from '../Configuration/TextToImage'
+import '../CustomStyle.css'
 
 const Home = (porps) => {
   const history = useHistory();
@@ -14,12 +16,38 @@ const Home = (porps) => {
   const [password, setPassword] = useState('');
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  // captcha 
+  const [captchaText, setCaptchaText] = useState('');
+  const [userInput, setUserInput] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [rotation] = useState(0);
+
+  const generateCaptcha = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let text = '';
+    for (let i = 0; i < 6; i++) {
+      text += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    setCaptchaText(text);
+  };
+
+  // Validate user input on each change
+  useEffect(() => {
+    if (userInput.toLowerCase() === captchaText.toLowerCase()) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+  }, [userInput, captchaText]);
+
+
+
   const handleRedirect = (destination) => {
     // Redirect to the '/registration' route
-    if(destination ==='registration'){
+    if (destination === 'registration') {
       history.push('/registration');
     }
-    
+
   };
   const handleAuth = () => {
     if (auth.authenticate === true) {
@@ -33,19 +61,29 @@ const Home = (porps) => {
     setemailID(e.target.value);
   };
 
+  const handleCaptchaChange = (e) => {
+    setUserInput(e.target.value);
+  };
+
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const user = { emailID, password };
+
     try {
-      if (emailID !== "" || password !== "") {
-        await dispatch(login(user));
+      if (isValid) {
+        alert('Captcha is validated!');
+        if (emailID !== "" || password !== "") {
+          await dispatch(login(user));
+        }
       } else {
         // Alert("All Fields Are Important");
-        console.log("Something went wrong")
+
+        alert('Invalid Captcha! Please try again.');
+        generateCaptcha();
       }
     } catch (error) {
       console.error("Error:", error);
@@ -55,7 +93,9 @@ const Home = (porps) => {
     // Implement your login logic here using 'username' and 'password'
     console.log('Login Clicked');
   };
-
+  useEffect(() => {
+    generateCaptcha();
+  }, []);
   return (
 
     <Layout>
@@ -78,7 +118,7 @@ const Home = (porps) => {
           </div>
           <p className=' text-white font-light text-base'>Provide your User Name and Password to Login</p>
 
-          <form  className='bg-blue-500 justify-center h-64 '>
+          <form className='bg-blue-500 justify-center h-64 '>
             <div className='p-2'>
               <div className="field-row bg-blue-500 p-2">
 
@@ -101,12 +141,22 @@ const Home = (porps) => {
                   required
                 />
               </div>
+              {/* Captcha */}
               <div className='bg-blue-500 '>
                 <div className=' mt-2 p-2  flex justify-between'>
-                  <input type='text' className=' p-1 rounded-lg w-32' />
-                  <img src={refreshLogo} alt='' className='w-10' />
-                  <input type='text' className=' p-1 rounded-lg w-40' />
+                  <div className="captchatext select-none">
+                    <TextToImage text={captchaText} style={{ backgroundColor: 'white', fontWeight: '500px' }} />
+                    <div className="absolute inset-x-0 inset-y-5 bottom-0 h-[2px] bg-slate-500 transform rotate-6"></div>
+                  </div>
+
+                  <img src={refreshLogo} onClick={generateCaptcha} alt='' className={`w-10 transition-transform transform ${rotation !== 0 ? 'rotate-' + rotation : ''}`} />
+                  <input type='text' id="captcha"
+                    value={userInput}
+                    onChange={handleCaptchaChange}
+                    placeholder="Enter captcha" className=' p-1 rounded-lg w-40' />
+
                 </div>
+
               </div>
             </div>
 

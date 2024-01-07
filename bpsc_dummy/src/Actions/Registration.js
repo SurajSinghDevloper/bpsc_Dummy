@@ -2,11 +2,11 @@ import RouteTo from "../Hoc/RouteTo";
 import { userConstant } from "../Constants/UserConstant";
 
 export const signup = (user) => {
-  console.log("👉👉 ~~ file: auth.action.js:6 ~~ login ~~ user:", user);
+ 
   return async (dispatch) => {
     dispatch({ type: userConstant.USER_REGISTER_REQUEST });
     try {
-      const res = await RouteTo.post(`/user/signup`, { ...user });
+      const res = await RouteTo.post(`/api/v1/auth/registration`, { ...user });
 
       if (res.status === 200) {
         const { message } = res.data;
@@ -14,6 +14,7 @@ export const signup = (user) => {
           type: userConstant.USER_REGISTER_SUCCESS,
           payload: { message },
         });
+       
       } else {
         if (res.status === 400) {
           dispatch({
@@ -25,7 +26,7 @@ export const signup = (user) => {
         }
       }
     } catch (error) {
-      console.log("Error:", error);
+      
       dispatch({ type: userConstant.USER_REGISTER_FAILURE });
     }
   };

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { verifyOTP } from '../Actions/VerifyOtpAction';
 
-const OTPModal = ({ isOpen, onClose }) => {
+
+const OTPModal = ({ isOpen, onClose, emailID }) => {
   const [otp, setOTP] = useState('');
   const [timer, setTimer] = useState(60);
-
+  const dispatch = useDispatch();
   const handleInputChange = (e) => {
     setOTP(e.target.value);
   };
@@ -16,7 +19,6 @@ const OTPModal = ({ isOpen, onClose }) => {
       }, 1000);
     }
 
-    // Clear the interval when the modal is closed or unmounted
     return () => clearInterval(countdown);
   }, [isOpen]);
 
@@ -26,14 +28,20 @@ const OTPModal = ({ isOpen, onClose }) => {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Validate OTP logic here
-    console.log('Submitted OTP:', otp);
-    // Close the modal after verification
-    onClose();
-  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append('email', emailID);
+      formData.append('otp', otp);
+      dispatch(verifyOTP(formData));
+      onClose();
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      // Handle error accordingly (e.g., display a message to the user)
+    }
+  };
   return (
     <div className={`fixed z-50 inset-0 overflow-y-auto ${isOpen ? 'block' : 'hidden'}`}>
       <div className="flex items-center justify-center min-h-screen">

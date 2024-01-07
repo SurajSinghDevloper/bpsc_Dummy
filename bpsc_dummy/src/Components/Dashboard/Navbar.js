@@ -1,6 +1,14 @@
 import React from 'react';
-
+import { signout } from '../../Actions/SignIn';
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const handleLogout = () => {
+    dispatch(signout());
+    history.push("/");
+  };
   return (
     <nav className="bg-blue-500 p-4 fixed w-full">
       <div className="container mx-auto flex justify-between items-center">
@@ -14,7 +22,7 @@ const Navbar = () => {
           <li><a href="/" className="hover:text-gray-300">Home</a></li>
           <li><a href="/events" className="hover:text-gray-300">Events</a></li>
           <li><a href="/contact" className="hover:text-gray-300">Contact</a></li>
-          <li><a href="/" className="hover:text-gray-300">Log-Out</a></li>
+          <li><a href="/" onClick={handleLogout} className="hover:text-gray-300">Log-Out</a></li>
         </ul>
       </div>
     </nav>

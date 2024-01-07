@@ -1,0 +1,11 @@
+
+.captchatext {
+    border: 1px solid #ebebf0;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #ebebf0;
+    position: relative;
+    height: 40px;
+    border-radius: 4px;
+}

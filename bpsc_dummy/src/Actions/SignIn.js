@@ -13,7 +13,6 @@ export const login = (user) => {
 
     try {
       const res = await RouteTo.post(`/api/v1/auth/login`, { ...user });
-      console.log(res)
       if (res.status === 200) {
         const { token, userDetails } = res.data;
         const userJson = userDetails;
@@ -44,7 +43,6 @@ export const login = (user) => {
 export const isUserLoggedIn = () => {
   return (dispatch) => {
     const token = getCookie("token"); // Use the correct cookie name
-    console.log("TOKEN FROM isUserLoggedIn --------->>>>>", token);
 
     const userJSON = localStorage.getItem("user");
 
