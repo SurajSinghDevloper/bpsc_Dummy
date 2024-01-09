@@ -1,6 +1,9 @@
 import React from 'react';
 import DashLayout from './DashLayout';
 import PersonLogo from '../../Assets/person.png';
+import Personal_Information from './Personal_Information';
+import Qualification_Information from './Qualification_Information';
+import Candidate_Documents from './Candidate_Documents';
 
 const Dashboard = (props) => {
   return (
@@ -14,16 +17,28 @@ const Dashboard = (props) => {
         }}>
           <IDCard />
         </div>
-
-        {/* Statistics Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {/* Statistic Cards */}
-          {/* ... */}
+        
+        <hr className='text-black'/>
+        <h1 className='text-2xl'>Personal Information</h1>
+        <div className='mt-5' style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+          
+          <Personal_Information />
         </div>
 
-        {/* Quick Links Section */}
-        {/* ... */}
-
+        <hr className='text-black'/>
+        <h1 className='text-2xl'>Qualification Information</h1>
+        <div className='mt-5' >
+          <Qualification_Information />
+        </div>
+        <hr className='text-black mt-3'/>
+        <h1 className='text-2xl'>Candidate's Documents</h1>
+        <div className='mt-5' >
+          <Candidate_Documents />
+        </div>
         {/* Footer */}
         <footer className="text-center text-gray-500">
           <p>&copy; 2024 Your Company. All rights reserved.</p>
@@ -67,12 +82,8 @@ const IDCard = () => {
           </div>
 
           <div className=' '>
-            <div className="flex items-center mb-4 ">
-              <label className="w-full text-right mr-2">Username:</label>
-              <input type="text" value="Suraj Kumar" className=" p-2 border rounded-md" />
-            </div>
-            <div className="flex items-center mb-4">
-              <label className="w-full text-right mr-2">Mobile:</label>
+          <div className="flex items-center mb-4">
+              <label className="w-full text-right mr-2">Father:</label>
               <input type="text" value="Lastname" className=" p-2 border rounded-md" />
             </div>
             <div className="flex items-center mb-4">
@@ -80,9 +91,16 @@ const IDCard = () => {
               <input type="text" value="Lastname" className=" p-2 border rounded-md" />
             </div>
             <div className="flex items-center mb-4">
-              <label className="w-full text-right mr-2">Father:</label>
+              <label className="w-full text-right mr-2">Mobile:</label>
               <input type="text" value="Lastname" className=" p-2 border rounded-md" />
             </div>
+            <div className="flex items-center mb-4 ">
+              <label className="w-full text-right mr-2">Aadhar No:</label>
+              <input type="text" value="Suraj Kumar" className=" p-2 border rounded-md" />
+            </div>
+
+
+
             {/* Add more fields similarly */}
           </div>
         </form>
