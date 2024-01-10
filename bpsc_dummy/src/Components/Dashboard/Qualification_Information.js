@@ -53,8 +53,8 @@ const Qualification_Information = () => {
 
             </table>
             <div className='container'>
-                <div >
-                    <h3 className='text-2xl text-center text-gray-500'>Accademic Documents</h3>
+                <div className='bg-slate-200' >
+                    <h3 className='text-2xl text-center text-gray-500 p-2'>Accademic Documents</h3>
                     <hr className='w-11/12 ml-12 text-center'/>
                 </div>
                 <div>

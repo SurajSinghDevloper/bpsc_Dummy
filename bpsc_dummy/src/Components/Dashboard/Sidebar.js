@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-const Sidebar = () => {
+const Sidebar = ({ setActivePage }) => {
   return (
     <div className="bg-gray-800 text-white w-64 h-screen fixed left-0 top-0 overflow-y-auto">
       {/* Sidebar header */}
@@ -10,10 +10,14 @@ const Sidebar = () => {
 
       {/* Sidebar links */}
       <ul className="py-4">
-        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">Dashboard</li>
-        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">Users</li>
-        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">Products</li>
-        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">Settings</li>
+        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => setActivePage('Dashboard')}>Dashboard</li>
+        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => setActivePage('Event List')}>Event List</li>
+        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => setActivePage('Submitted Form')}>Submitted Form</li>
+        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => setActivePage('Payment')}>Payment</li>
+        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => setActivePage('Admit-Card')}>Admit-Card</li>
+        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => setActivePage('Submitted Form Status')}>Submitted Form Status </li>
+        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => setActivePage('Help')}>Help </li>
+        <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => setActivePage('FAQs')}>FAQ's </li>
         {/* ... Add more sidebar links */}
       </ul>
 
@@ -24,5 +28,6 @@ const Sidebar = () => {
     </div>
   );
 };
+
 
 export default Sidebar;

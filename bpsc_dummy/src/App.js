@@ -4,10 +4,10 @@ import Home from "./Components/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { isUserLoggedIn } from "./Actions/SignIn";
 import PrivateRoute from "./Hoc/PrivateRoute";
-import Dashboard from "./Components/Dashboard/Dashboard";
 import './App.css'
 import Registration from "./Components/Registration";
 import ContactUs from "./Components/ContactUs";
+import Dashboard from "./Components/Dashboard/Dashboard";
 
 const App = () => {
   const auth = useSelector((state) => {
