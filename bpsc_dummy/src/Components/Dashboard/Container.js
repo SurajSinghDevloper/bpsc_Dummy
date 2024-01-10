@@ -4,6 +4,7 @@ import React from "react";
 import Profile from "./Profile";
 
 import Navbar from "./Navbar";
+import EventList from "./EventList";
 
 const Container = ({ activePage }) => {
 
@@ -13,7 +14,7 @@ const Container = ({ activePage }) => {
         case 'Dashboard':
           return <Profile />;
         case 'Event List':
-          return <div>OOPS It's Under Construction</div>;
+          return <EventList/>;
         case 'Submitted Form':
             return <div>OOPS Submitted Form is Under Construction</div>;
         case 'Payment':
