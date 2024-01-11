@@ -1,33 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PersonLogo from '../../Assets/person.png';
 import Personal_Information from './Personal_Information';
 import Qualification_Information from './Qualification_Information';
 import Candidate_Documents from './Candidate_Documents';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch } from 'react-redux';
+import { personalInfoAction } from '../../Actions/Users/PersonalInfoAction';
 
 
 const Profile = (props) => {
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({
+    firstname: '',
+    father: '',
+    gender: '',
+    maritalStatus: '',
+    state: '',
+    city: '',
+    stateOfDomicile: '',
+    preferredLanguage: '',
+    middlename: '',
+    mother: '',
+    category: '',
+    mobile: '',
+    district: '',
+    address: '',
+    isDisability: false,
+    disabilityType: '',
+    disabilityRemark: '',
+    document: '',
+    permanentAddress: '',
+    lastname: '',
+    email: '',
+    nationality: '',
+    aadharNo: '',
+    pincode: '',
+    religion: '',
+    identificationMarks: '',
+    belongTo: '',
+  });
+
+  const handleFormChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handleSave = () => {
+    // Handle the save logic, e.g., make a POST request to your backend
+    console.log(formData);
+    dispatch(personalInfoAction(formData))
+  };
   return (
     <>
-        
+
       <div className="container p-5 ">
         {/* Page header */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop:'10px'
+          marginTop: '10px'
         }}>
           <IDCard />
         </div>
         <hr className='text-black' />
-        <div className='flex justify-between items-center bg-slate-200 p-2'>
-          <h1 className='text-2xl'>Profile Information</h1>
+        <div className='flex justify-between items-center bg-slate-200 p-1'>
+          <h1 className='text-xl'>Profile Information</h1>
           <div className='space-x-2'>
-            <button className='bg-green-400 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faSave} className='text-xl mr-2' />Save</button>
-            <button className='bg-green-700 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faEdit} className='text-xl mr-2' />Edit</button>
-            <button className='bg-red-400 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faTrash} className='text-xl mr-2' />Delete</button>
+            <button onClick={handleSave} className='bg-green-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faSave} className='text-lg mr-2' />Save</button>
+            <button className='bg-green-700 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faEdit} className='text-lg mr-2' />Edit</button>
+            <button className='bg-red-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faTrash} className='text-lg mr-2' />Delete</button>
           </div>
         </div>
         <div className='mt-5' style={{
@@ -36,31 +79,31 @@ const Profile = (props) => {
           alignItems: 'center',
         }}>
 
-          <Personal_Information />
+          <Personal_Information formData={formData} onFormChange={handleFormChange} setFormData={setFormData} />
 
 
         </div>
 
         <hr className='text-black mb-2' />
-        <div className='flex justify-between items-center bg-slate-200 p-2'>
-        <h1 className='text-2xl'>Qualification Information</h1>
+        <div className='flex justify-between items-center bg-slate-200 p-1'>
+          <h1 className='text-xl'>Qualification Information</h1>
           <div className='space-x-2'>
-            <button className='bg-green-400 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faSave} className='text-xl mr-2' />Save</button>
-            <button className='bg-green-700 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faEdit} className='text-xl mr-2' />Edit</button>
-            <button className='bg-red-400 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faTrash} className='text-xl mr-2' />Delete</button>
+            <button className='bg-green-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faSave} className='text-lg mr-2' />Save</button>
+            <button className='bg-green-700 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faEdit} className='text-lg mr-2' />Edit</button>
+            <button className='bg-red-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faTrash} className='text-lg mr-2' />Delete</button>
           </div>
         </div>
- 
+
         <div className='mt-5' >
           <Qualification_Information />
         </div>
         <hr className='text-black mt-3' />
-        <div className='flex justify-between items-center bg-slate-200 p-2'>
-        <h1 className='text-2xl'>Candidate Documents</h1>
+        <div className='flex justify-between items-center bg-slate-200 p-1'>
+          <h1 className='text-xl'>Candidate Documents</h1>
           <div className='space-x-2'>
-            <button className='bg-green-400 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faSave} className='text-xl mr-2' />Save</button>
-            <button className='bg-green-700 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faEdit} className='text-xl mr-2' />Edit</button>
-            <button className='bg-red-400 rounded-md p-2 text-white text-xl'><FontAwesomeIcon icon={faTrash} className='text-xl mr-2' />Delete</button>
+            <button className='bg-green-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faSave} className='text-lg mr-2' />Save</button>
+            <button className='bg-green-700 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faEdit} className='text-lg mr-2' />Edit</button>
+            <button className='bg-red-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faTrash} className='text-lg mr-2' />Delete</button>
           </div>
         </div>
         <div className='mt-5' >
@@ -71,7 +114,7 @@ const Profile = (props) => {
           <p>&copy; 2024 Your Company. All rights reserved.</p>
         </footer>
       </div>
-  
+
     </>
 
   );
