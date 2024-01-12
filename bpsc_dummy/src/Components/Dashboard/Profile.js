@@ -5,11 +5,13 @@ import Qualification_Information from './Qualification_Information';
 import Candidate_Documents from './Candidate_Documents';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { personalInfoAction } from '../../Actions/Users/PersonalInfoAction';
 
 
 const Profile = (props) => {
+  const info = useSelector((state) => state.personalInfo);
+  console.log(info.userProfile)
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -62,7 +64,7 @@ const Profile = (props) => {
           alignItems: 'center',
           marginTop: '10px'
         }}>
-          <IDCard />
+          <IDCard pInfo={info}/>
         </div>
         <hr className='text-black' />
         <div className='flex justify-between items-center bg-slate-200 p-1'>
@@ -120,13 +122,13 @@ const Profile = (props) => {
   );
 };
 
-const IDCard = () => {
+const IDCard = ({pInfo}) => {
   return (
     <div className="w-11/12  bg-white rounded-lg flex justify-between ">
       <div>
         <img className="w-48 h-32 rounded-full mx-auto" src={PersonLogo} alt="Profile" />
         <div className="text-center mt-4">
-          <div className="font-bold text-xl">John Doe</div>
+          <p className="font-bold text-xl">John Doe</p>
           <p className="text-gray-700 text-base">Username: 123456</p>
           <p className="text-gray-700 text-base">Dob: 10/12/1999</p>
         </div>

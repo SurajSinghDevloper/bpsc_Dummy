@@ -16,7 +16,7 @@ export const getUserProfileAction = (email) => {
       });
 
       if (res.status === 200) {
-        const userProfile = res.data.profile;
+        const userProfile = res.data;
 
         dispatch({
           type: userConstant.GET_PROFILE_INFO_SUCCESS,

@@ -21,7 +21,7 @@ const App = () => {
   useEffect(() => {
     if (!auth.authenticate) {
       dispatch(isUserLoggedIn());
-      dispatch(getUserProfileAction(auth.user))
+      dispatch(getUserProfileAction(auth.user.emailID))
     }
   }, [auth.authenticate, dispatch]);
 

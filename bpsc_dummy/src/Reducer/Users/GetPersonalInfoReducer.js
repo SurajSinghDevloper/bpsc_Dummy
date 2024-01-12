@@ -1,39 +1,37 @@
 import { userConstant } from '../../Constants/UserConstant';
 
 const initialState = {
-  userProfile: null,
-  loading: false,
-  error: null,
-};
+    userProfile: null,
+    error: null,
+    loading: false,
+  };
 
 const getPersonalInfoReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case userConstant.GET_PROFILE_INFO_REQUEST:
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      };
-
-    case userConstant.GET_PROFILE_INFO_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        userProfile: action.payload.userProfile,
-        error: null,
-      };
-
-    case userConstant.GET_PROFILE_INFO_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        userProfile: null,
-        error: action.payload.error,
-      };
-
-    default:
-      return state;
-  }
+    switch (action.type) {
+        case userConstant.GET_PROFILE_INFO_REQUEST:
+          return {
+            ...state,
+            loading: true,
+          };
+    
+        case userConstant.GET_PROFILE_INFO_SUCCESS:
+          return {
+            ...state,
+            userProfile: action.payload.userProfile,
+            loading: false,
+            error: null,
+          };
+    
+        case userConstant.GET_PROFILE_INFO_FAILURE:
+          return {
+            ...state,
+            loading: false,
+            error: action.payload.error,
+          };
+    
+        default:
+          return state;
+      }
 };
 
 export default getPersonalInfoReducer;
