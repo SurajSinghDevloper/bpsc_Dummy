@@ -1,11 +1,55 @@
-import React from 'react'
+import React,{useState} from 'react'
 
 const Qualification_Information = () => {
+    const [qualificationData, setQualificationData] = useState({
+        '10': { name: '', specialization: '', school: '', marks: '', year: '' },
+        '12': { name: '', specialization: '', school: '', marks: '', year: '' },
+        'UG': { name: '', specialization: '', school: '', marks: '', year: '' },
+        'PG': { name: '', specialization: '', school: '', marks: '', year: '' },
+        'OTHER': { name: '', specialization: '', school: '', marks: '', year: '' },
+    });
+
+    const handleQualificationChange = (key, field, event) => {
+        setQualificationData(prevData => ({
+            ...prevData,
+            [key]: {
+                ...prevData[key],
+                [field]: event.target.value,
+            },
+        }));
+    };
+    const [academicDocuments, setAcademicDocuments] = useState({
+        '10': { name: '10', marksSheet: null, viewDocuments: '' },
+        '12': { name: '12', marksSheet: null, viewDocuments: '' },
+        'UG': { name: 'UG', marksSheet: null, viewDocuments: '' },
+        'PG': { name: 'PG', marksSheet: null, viewDocuments: '' },
+        'OTHER': { name: 'OTHER', marksSheet: null, viewDocuments: '' },
+    });
+
+    const handleMarksSheetChange = (key, event) => {
+        setAcademicDocuments(prevData => ({
+            ...prevData,
+            [key]: {
+                ...prevData[key],
+                marksSheet: event.target.files[0],
+            },
+        }));
+    };
+
+    const handleViewDocumentsChange = (key, event) => {
+        setAcademicDocuments(prevData => ({
+            ...prevData,
+            [key]: {
+                ...prevData[key],
+                viewDocuments: event.target.value,
+            },
+        }));
+    };
     return (
         <>
-            <table className='w-full'>
+<table className='w-full'>
                 <thead className='border '>
-                    <tr >
+                    <tr>
                         <td className='text-lg border text-center'>Qualification Name</td>
                         <td className='text-lg border text-center'>Qualification <br/> (Specialization)</td>
                         <td className='text-lg border text-center'>Name of School <br/>University</td>
@@ -14,43 +58,51 @@ const Qualification_Information = () => {
                     </tr>
                 </thead>
                 <tbody className='mt-2'>
-                <tr className='border'>
-                    <td className='border p-1'><input type='text'  className='text-center' value={10}/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                </tr>
-                <tr className='border '>
-                    <td className='border p-1'><input type='text' className='text-center' value={12}/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                </tr>
-                <tr className='border '>
-                    <td className='border p-1'><input type='text' className='text-center' value={'UG'}/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                </tr>
-                <tr className='border '>
-                    <td className='border p-1'><input type='text' className='text-center' value={'PG'}/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                </tr>
-                <tr className='border '>
-                    <td className='border p-1'><input type='text' className='text-center' value={'OTHER'} /></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-                </tr>
+                    {Object.keys(qualificationData).map(key => (
+                        <tr key={key} className='border'>
+                            <td className='border p-1'>
+                                <input
+                                    type='text'
+                                    className='text-center'
+                                    value={qualificationData[key].name}
+                                    readOnly
+                                />
+                            </td>
+                            <td className='border'>
+                                <input
+                                    type='text'
+                                    className='w-full'
+                                    value={qualificationData[key].specialization}
+                                    onChange={(e) => handleQualificationChange(key, 'specialization', e)}
+                                />
+                            </td>
+                            <td className='border'>
+                                <input
+                                    type='text'
+                                    className='w-full'
+                                    value={qualificationData[key].school}
+                                    onChange={(e) => handleQualificationChange(key, 'school', e)}
+                                />
+                            </td>
+                            <td className='border'>
+                                <input
+                                    type='text'
+                                    className='w-full'
+                                    value={qualificationData[key].marks}
+                                    onChange={(e) => handleQualificationChange(key, 'marks', e)}
+                                />
+                            </td>
+                            <td className='border'>
+                                <input
+                                    type='text'
+                                    className='w-full'
+                                    value={qualificationData[key].year}
+                                    onChange={(e) => handleQualificationChange(key, 'year', e)}
+                                />
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
-
             </table>
             <div className='container'>
                 <div className='bg-slate-200' >
@@ -59,46 +111,42 @@ const Qualification_Information = () => {
                 </div>
                 <div>
                 <table className='w-full'>
-                <thead className='border '>
-                    <tr >
+                <thead className='border'>
+                    <tr>
                         <td className='text-lg border text-center'>Qualification Name</td>
                         <td className='text-lg border text-center'>Marks Sheet Upload</td>
-                        <td className='text-lg border text-center'>View Uploded Documents</td>
+                        <td className='text-lg border text-center'>View Uploaded Documents</td>
                     </tr>
                 </thead>
                 <tbody className='mt-2'>
-                <tr className='border'>
-                    <td className='border p-1'><input type='text'  className='text-center' value={10}/></td>
-                    <td className='border '><input type='file' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-
-                </tr>
-                <tr className='border '>
-                    <td className='border p-1'><input type='text' className='text-center' value={12}/></td>
-                    <td className='border '><input type='file' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-
-                </tr>
-                <tr className='border '>
-                    <td className='border p-1'><input type='text' className='text-center' value={'UG'}/></td>
-                    <td className='border '><input type='file' className='w-full'/></td>
-                    <td className='border '><input type='text' className='w-full'/></td>
-
-                </tr>
-                <tr className='border '>
-                    <td className='border p-1'><input type='text' className='text-center' value={'PG'}/></td>
-                    <td className='border '><input type='file' /></td>
-                    <td className='border '><input type='text' /></td>
-
-                </tr>
-                <tr className='border '>
-                    <td className='border p-1'><input type='text' className='text-center' value={'OTHER'} /></td>
-                    <td className='border '><input type='file' /></td>
-                    <td className='border '><input type='text' /></td>
-
-                </tr>
+                    {Object.keys(academicDocuments).map(key => (
+                        <tr key={key} className='border'>
+                            <td className='border p-1'>
+                                <input
+                                    type='text'
+                                    className='text-center'
+                                    value={academicDocuments[key].name}
+                                    readOnly
+                                />
+                            </td>
+                            <td className='border'>
+                                <input
+                                    type='file'
+                                    className='w-full'
+                                    onChange={(e) => handleMarksSheetChange(key, e)}
+                                />
+                            </td>
+                            <td className='border'>
+                                <input
+                                    type='text'
+                                    className='w-full'
+                                    value={academicDocuments[key].viewDocuments}
+                                    onChange={(e) => handleViewDocumentsChange(key, e)}
+                                />
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
-
             </table>
                 </div>
             </div>

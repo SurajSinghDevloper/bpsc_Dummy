@@ -30,6 +30,8 @@ export const personalInfoAction = (profileInfo) => {
         formData.append("identification", profileInfo.identificationMarks);
         formData.append("pLanguage", profileInfo.preferredLanguage);
         formData.append("locationType", profileInfo.belongTo);
+        formData.append("email",profileInfo.email)
+        console.log(profileInfo.email)
 
         const Authorization = {
             Authorization: getCookie("token"),
@@ -42,17 +44,17 @@ export const personalInfoAction = (profileInfo) => {
             });
 
             if (res.status === 200) {
-                const updatedUser = res.data.user;
+                const userProfileInfo = res.data.user;
 
                 // Update user data in Redux store
                 dispatch({
                     type: userConstant.UPDATE_PROFILE_SUCCESS,
-                    payload: { user: updatedUser },
+                    payload: { userProfileInfo: userProfileInfo },
                 });
                 // Update user data in local storage
 
-                localStorage.setItem("user", JSON.stringify(formData));
-                console.log(formData);
+               
+                
             } else {
                 dispatch({
                     type: userConstant.UPDATE_PROFILE_FAILURE,

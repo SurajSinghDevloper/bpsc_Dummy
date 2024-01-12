@@ -6,6 +6,7 @@ import updateUserImg from "./UpdateProfileImgReducer";
 import SendOtpReducer from "./SendOtpReducer";
 import VerifyOTPReducer from "./verifyOTPReducer";
 import personalInfoReducer from "./Users/PersonalInfoReducer";
+import getPersonalInfoReducer from "./Users/GetPersonalInfoReducer"
 
 const rootReducer = combineReducers({
   auth: login,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   updateUserImg: updateUserImg,
   SendOtpReducer: SendOtpReducer,
   VerifyOTPReducer: VerifyOTPReducer,
-  personalInfoReducer: personalInfoReducer
+  personalInfoReducer: personalInfoReducer,
+  personalInfo:getPersonalInfoReducer
 });
 
 export default rootReducer;

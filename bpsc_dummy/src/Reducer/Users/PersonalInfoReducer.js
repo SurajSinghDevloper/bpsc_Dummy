@@ -1,8 +1,7 @@
 import { userConstant } from "../../Constants/UserConstant";
 
 const initialState = {
-    // ... other initial state properties ...
-    user: null,
+    userProfileInfo: null,
     updatingProfile: false,
     updateProfileError: null,
 };
@@ -18,7 +17,7 @@ const personalInfoReducer = (state = initialState, action) => {
         case userConstant.UPDATE_PROFILE_SUCCESS:
             return {
                 ...state,
-                user: action.payload.user,
+                userProfileInfo: action.payload.userProfileInfo,
                 updatingProfile: false,
                 updateProfileError: null,
             };

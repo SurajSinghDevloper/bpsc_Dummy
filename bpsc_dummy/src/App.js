@@ -8,17 +8,20 @@ import './App.css'
 import Registration from "./Components/Registration";
 import ContactUs from "./Components/ContactUs";
 import Dashboard from "./Components/Dashboard/Dashboard";
+import { getUserProfileAction } from "./Actions/Users/GetProfileInfoAction";
 
 const App = () => {
   const auth = useSelector((state) => {
     return state.auth;
   });
-
+  console.log(auth)
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!auth.authenticate) {
       dispatch(isUserLoggedIn());
+      dispatch(getUserProfileAction(auth.user))
     }
   }, [auth.authenticate, dispatch]);
 

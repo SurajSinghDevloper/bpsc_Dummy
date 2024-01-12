@@ -1,6 +1,4 @@
-// getUserProfileAction.js
-
-import { userConstant  } from '../../Constants/UserConstant';
+import { userConstant } from '../../Constants/UserConstant';
 import { getCookie } from "../../Configuration/Cookies";
 import RouteTo from "../../Hoc/RouteTo";
 
@@ -9,19 +7,17 @@ export const getUserProfileAction = (email) => {
     dispatch({ type: userConstant.GET_PROFILE_INFO_REQUEST });
 
     const Authorization = {
-      Authorization: getCookie("token"), // Make sure you have the getCookie function defined
+      Authorization: getCookie("token"), 
     };
-    const base64Encoded = btoa(email);
+
     try {
-      // Assuming you have an API endpoint for fetching user profile
-      const res = await RouteTo.get(`/api/v1/user/${base64Encoded}`, {
+      const res = await RouteTo.get(`/api/v1/user/info/${email}`, {
         headers: Authorization,
       });
 
       if (res.status === 200) {
         const userProfile = res.data.profile;
 
-        // Update user profile data in Redux store
         dispatch({
           type: userConstant.GET_PROFILE_INFO_SUCCESS,
           payload: { userProfile },
