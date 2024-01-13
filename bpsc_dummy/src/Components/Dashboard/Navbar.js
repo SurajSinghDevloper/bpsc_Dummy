@@ -1,12 +1,10 @@
-import React from 'react';
-import { signout } from '../../Actions/SignIn';
+import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+
 const Navbar = () => {
-  const dispatch = useDispatch();
   const history = useHistory();
   const handleLogout = () => {
-    dispatch(signout());
+    // signOut();
     history.push("/");
   };
   return (

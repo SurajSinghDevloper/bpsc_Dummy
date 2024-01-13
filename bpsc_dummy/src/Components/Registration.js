@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import Layout from './LandingPages/Layout'
 import SignupSVG from '../Assets/SignupSVG.svg'
 import OTPModal from './OTPModal';
-import { useDispatch } from "react-redux";
-import { signup } from '../Actions/Registration';
-import { sendOtp } from '../Actions/SendOtpAction';
 import { useHistory } from 'react-router-dom';
 
 const Registration = () => {
@@ -20,7 +17,7 @@ const Registration = () => {
         mobileNo:'',
         password: '',
     });
-    const dispatch = useDispatch();
+   
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -32,7 +29,7 @@ const Registration = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.firstName !== "" || formData.middleName !== "" || formData.lastName !== "" || formData.emailID !== "" || formData.mobileNo !== "" || formData.dob !== "" || formData.password !== "") {
-            dispatch(signup(formData));
+            // dispatch(signup(formData));
             history.push('/');
         }
         else {
@@ -54,7 +51,7 @@ const Registration = () => {
 
     const sendOTP = async () => {
         try {
-           dispatch(sendOtp(formData.emailID))
+        //    dispatch(sendOtp(formData.emailID))
            setSignupDisabled(false);
          
         } catch (error) {
@@ -64,7 +61,7 @@ const Registration = () => {
     };
     const handleVerifyClick = () => {
         openOTPModal(); // Open OTP Modal
-        sendOTP(); // Send OTP
+        // sendOTP(); 
       };
     return (
         <Layout>

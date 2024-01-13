@@ -4,18 +4,16 @@ import containerLogo from '../Assets/login-box-bg.jpg'
 import loginLogo from '../Assets/login-heading-icon.png'
 import refreshLogo from '../Assets/pngegg.png'
 import { useHistory } from 'react-router-dom';
-import { login } from "../Actions/SignIn";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min'
 import TextToImage from '../Configuration/TextToImage'
+import {loginPost} from '../Configuration/ApiCalls'
 import '../CustomStyle.css'
 
-const Home = (porps) => {
-  const history = useHistory();
+const Home = () => {
   const [emailID, setemailID] = useState('');
   const [password, setPassword] = useState('');
-  const auth = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  const history = useHistory();
+  
+
   // captcha 
   const [captchaText, setCaptchaText] = useState('');
   const [userInput, setUserInput] = useState('');
@@ -45,17 +43,11 @@ const Home = (porps) => {
   const handleRedirect = (destination) => {
     // Redirect to the '/registration' route
     if (destination === 'registration') {
-      history.push('/registration');
+      history.push('/registration')
     }
 
   };
-  const handleAuth = () => {
-    if (auth.authenticate === true) {
-      return <Redirect to="/dashboard" />;
-    } else {
-      return null; // Return null if no redirection is required
-    }
-  };
+
 
   const handleUsernameChange = (e) => {
     setemailID(e.target.value);
@@ -77,7 +69,10 @@ const Home = (porps) => {
       if (isValid) {
         alert('Captcha is validated!');
         if (emailID !== "" || password !== "") {
-          await dispatch(login(user));
+          const resData =loginPost(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`,user)
+          if(resData){
+            history.push('/dashboard')
+          }
         }
       } else {
         // Alert("All Fields Are Important");
@@ -167,7 +162,7 @@ const Home = (porps) => {
               </button>
             </div>
           </form>
-          {handleAuth()}
+          {/* {handleAuth()} */}
         </div>
       </div>
     </Layout>

@@ -1,10 +1,8 @@
 import React from "react";
 import { Route, Link } from "react-router-dom";
-import { getCookie } from "../Configuration/Cookies";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  let token = getCookie("token"); // Get the token from the cookie
-
+  let token = localStorage.getItem("token"); 
   return (
     <Route
       {...rest}

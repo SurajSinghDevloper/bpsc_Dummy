@@ -1,23 +1,20 @@
 {
-  "name": "bpsc_dummy",
+  "name": "myapp",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8988",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "axios": "^1.6.4",
-    "base-64": "^1.0.0",
-    "cra-template-cats": "1.1.4",
-    "dotenv": "^16.3.1",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
+    "dotenv": "^16.3.1",
     "react-dom": "^18.2.0",
-    "react-redux": "^9.0.4",
     "react-router-dom": "^5.3.4",
     "react-scripts": "5.0.1",
-    "redux": "^4.2.1",
-    "redux-thunk": "^2.4.2"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,6 +41,6 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.0"
+    "tailwindcss": "^3.4.1"
   }
 }

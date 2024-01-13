@@ -1,44 +1,43 @@
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Home from "./Components/Home";
-import { useDispatch, useSelector } from "react-redux";
-import { isUserLoggedIn } from "./Actions/SignIn";
-import PrivateRoute from "./Hoc/PrivateRoute";
-import './App.css'
-import Registration from "./Components/Registration";
-import ContactUs from "./Components/ContactUs";
-import Dashboard from "./Components/Dashboard/Dashboard";
-import { getUserProfileAction } from "./Actions/Users/GetProfileInfoAction";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Home from './Components/Home';
+import Registration from './Components/Registration';
+import ContactUs from './Components/ContactUs';
+import PrivateRoute from './Configuration/PrivateRoute';
+import Dashboard from './Components/Dashboard/Dashboard';
+import NotFoundPage from './NotFoundPage';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom';
 
-const App = () => {
-  const auth = useSelector((state) => {
-    return state.auth;
-  });
-  console.log(auth)
-  
-  const dispatch = useDispatch();
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
 
   useEffect(() => {
-    if (!auth.authenticate) {
-      dispatch(isUserLoggedIn());
-      dispatch(getUserProfileAction(auth.user.emailID))
-    }
-  }, [auth.authenticate, dispatch]);
+    const JSONToken = localStorage.getItem('token');
+    const userJSON = localStorage.getItem('user');
+    const isAuthenticated = JSONToken && userJSON;
+
+    setIsAuthenticated(isAuthenticated);
+  }, []);
 
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path='/registration' component={Registration}/>
-        <Route path='/contact' component={ContactUs}/>
+        <Route exact path="/">
+          {isAuthenticated ? <Dashboard /> : <Home />}
+        </Route>
+        <Route path='/registration' component={Registration} />
+        <Route path='/contact' component={ContactUs} />
         <PrivateRoute
           path="/dashboard"
           component={Dashboard}
-          isAuthenticated={auth.authenticate}
+          isAuthenticated={isAuthenticated}
         />
+        <Route path="/404" component={NotFoundPage} />
+        <Redirect to="/404" />
       </Switch>
     </Router>
   );
-};
+}
 
 export default App;

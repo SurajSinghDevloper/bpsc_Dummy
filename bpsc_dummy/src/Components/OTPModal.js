@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { verifyOTP } from '../Actions/VerifyOtpAction';
 
 
 const OTPModal = ({ isOpen, onClose, emailID }) => {
   const [otp, setOTP] = useState('');
   const [timer, setTimer] = useState(60);
-  const dispatch = useDispatch();
+
   const handleInputChange = (e) => {
     setOTP(e.target.value);
   };
@@ -35,7 +33,7 @@ const OTPModal = ({ isOpen, onClose, emailID }) => {
       const formData = new FormData();
       formData.append('email', emailID);
       formData.append('otp', otp);
-      dispatch(verifyOTP(formData));
+      // dispatch(verifyOTP(formData));
       onClose();
     } catch (error) {
       console.error('Error verifying OTP:', error);
