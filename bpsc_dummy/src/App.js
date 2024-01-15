@@ -14,12 +14,13 @@ function App() {
 
   useEffect(() => {
     const JSONToken = localStorage.getItem('token');
+    console.log(JSONToken)
     const userJSON = localStorage.getItem('user');
     const isAuthenticated = JSONToken && userJSON;
 
     setIsAuthenticated(isAuthenticated);
   }, []);
-
+console.log(isAuthenticated)
   return (
     <Router>
       <Switch>

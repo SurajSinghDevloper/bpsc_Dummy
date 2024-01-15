@@ -45,7 +45,7 @@ const Profile = (props) => {
           alignItems: 'center',
         }}>
 
-          <Personal_Information saveInfo={savePersonalInfo} />
+          {true &&<Personal_Information saveInfo={savePersonalInfo} />}
 
         </div>
 
