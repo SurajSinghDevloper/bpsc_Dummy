@@ -37,14 +37,12 @@ const Registration = () => {
                 history.push('/');
             } catch (error) {
                 console.error('Error in handleSubmit:', error.message);
-                // Handle the error accordingly (e.g., display an error message to the user)
             }
         } else {
             alert("All Fields are Mandatory !");
         }
-        // You can redirect or perform further actions after submission
     };
-    
+
 
 
     const openOTPModal = () => {
@@ -59,40 +57,36 @@ const Registration = () => {
         try {
             const otpFormData = new FormData();
             otpFormData.append("emailID", formData.emailID);
-    
-            // Add 'await' here to wait for the asynchronous operation to complete
             const res = await OtpPostData(`${process.env.REACT_APP_BASE_URL}/otp/send-otp`, otpFormData);
-    
 
-                setSignupDisabled(false);  // Enable signup button on successful OTP response
+
+            setSignupDisabled(false);
         } catch (error) {
             console.error('Error sending OTP:', error);
-            // Handle error accordingly (e.g., display a message to the user)
-            setSignupDisabled(false);  // Disable signup button on error
+            setSignupDisabled(false);
         }
     };
-    
-    
-    
+
+
+
     const handleVerifyClick = () => {
-        openOTPModal(); // Open OTP Modal
+        openOTPModal();
         sendOTP();
         setSignupDisabled(false)
     };
     return (
         <Layout>
 
-            <div className="relative flex items-center h-screen  bg-blue-100 justify-center">
-                <div className="flex flex-col lg:flex-row items-center p-8">
+            <div className=" flex h-1/2 items-center  bg-blue-100 justify-center">
+                <div className="flex flex-col sm:flex-row items-center ml-auto  pt-1 pb-1">
                     <img src={SignupSVG} alt="Signup" className="w-1/2  mr-20 " />
-                    <div className="w-full h-4/6 bg-blue-500 p-8">
-                        <h2 className="text-4xl font-bold text-white text-center">Sign up</h2>
-                        <hr className='font-bold text-white w-1/2 ml-28 p-2' />
+                    <div className="  bg-blue-500 h-1/2">
+                        <h2 className="text-5xl text-white text-center">Register</h2>
+                        {/* <hr className='font-bold text-white w-1/2 ml-28 p-2' /> */}
                         <p className="mt-2 text-md text-white text-center">
                             Create an account to get started
                         </p>
                         <form className="mt-6 space-y-4 p-8 w-full bg-blue-500" onSubmit={handleSubmit}>
-                            {/* ... Input fields */}
                             <div className="space-y-8">
                                 <div className='flex justify-center items-center '>
                                     <label htmlFor="firstName" className="sr-only">
@@ -203,9 +197,15 @@ const Registration = () => {
                                         placeholder="Password"
                                     />
                                 </div>
-                                {/* Add other input fields for middle name, last name, email, password */}
+
                             </div>
-                            <div className="w-full">
+                            <div className="w-full flex flex-row">
+                                <a  href='/'
+                                    className={`w-full cursor-pointer mr-2 py-2 px-4 border font-medium rounded-md text-white focus:ring-2 focus:ring-offset-2 bg-blue-500 hover:bg-blue-600`}
+                                >
+                                    All Ready Register ?
+                                </a>
+
                                 <button
                                     type="submit"
                                     disabled={signupDisabled}

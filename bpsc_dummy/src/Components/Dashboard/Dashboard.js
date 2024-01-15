@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Sidebar from './Sidebar'
 import Container from './Container'
-const Dashboard = (props) => {
+const Dashboard = () => {
   const [activePage, setActivePage] = useState("Dashboard");
-
+  
   return (
     <div className="w-full">
       <Sidebar setActivePage={setActivePage} />

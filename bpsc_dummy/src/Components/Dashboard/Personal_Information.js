@@ -2,13 +2,15 @@ import React, { useEffect, useState, useContext } from 'react'
 import { getData } from '../../Configuration/ApiCalls';
 import { MyContext } from '../../ContextApis/MyContext';
 import { postData } from '../../Configuration/ApiCalls';
+import { getCookie } from '../../Configuration/Cookies';
 
 
 const Personal_Information = ({ saveInfo }) => {
-    const usr = localStorage.getItem('user');
-    const userData = JSON.parse(usr);
-    const { setUserInfo, setProfileInfo, userInfo } = useContext(MyContext);
-
+    const [ usrInfo, setUsrInfo] = useState("")
+    const usr =  getCookie('user');
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const { setUserInfo, setProfileInfo, userInfo, initialData } = useContext(MyContext);
+    
     const [isDisability, setIsDisability] = useState(false);
     const [aadharNumber, setAadharNumber] = useState('');
     const [validationMessage, setValidationMessage] = useState('');
@@ -100,6 +102,8 @@ const Personal_Information = ({ saveInfo }) => {
         locationType: '',
     });
 
+    console.log(formData)
+
     useEffect(() => {
         if (userInfo) {
             setFormData({
@@ -128,7 +132,7 @@ const Personal_Information = ({ saveInfo }) => {
                 pincode: userInfo.pincode || "",
                 religion: userInfo.religion || "",
                 identification: userInfo.identification || "",
-                locationType: userInfo.identification || ""
+                locationType: userInfo.locationType || ""
             });
         }
     }, [userInfo]);
@@ -152,8 +156,11 @@ const Personal_Information = ({ saveInfo }) => {
         };
 
         fetchData();
-    }, [setUserInfo, setProfileInfo, usr, userData.emailID]);
+    }, [setUserInfo, setProfileInfo, usr]);
 
+    useEffect(() => {
+ setUsrInfo(localStorage.getItem("user"))
+    },[])
 
         if (saveInfo === true) {
             console.log("➡️➡️➡️➡️➡️➡️")
@@ -275,6 +282,8 @@ const Personal_Information = ({ saveInfo }) => {
                         onChange={(e) => onFormChange('cityOrVillage', e.target.value)}
                         placeholder="City / Village" className=" p-2 border rounded-md" />
                 </div>
+
+                
                 <div className="flex items-center mb-4">
                     <label className="w-full text-right mr-2">State Of Domicile:</label>
                     <input type="text"
@@ -346,7 +355,6 @@ const Personal_Information = ({ saveInfo }) => {
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-1/2 text-right mr-2">Disablity :</label>
-                    {/* <input type="text" placeholder="Disablity" className=" p-2 border rounded-md" /> */}
                     <select className="w-60 p-2 border rounded-md" onChange={handleDisabilityChange} value={formData.disablity && formData.disablity.toString()}>
 
                         <option >Select</option>
@@ -434,7 +442,7 @@ const Personal_Information = ({ saveInfo }) => {
                     <label className="w-full text-right mr-2">E-mail Id:</label>
                     <input type="text"
                         id='email'
-                        value={formData.email}
+                        value={formData.email||""}
                         onChange={(e) => onFormChange('email', e.target.value)}
                         placeholder="E-mail Id" className=" p-2 border rounded-md" />
                 </div>
@@ -495,7 +503,6 @@ const Personal_Information = ({ saveInfo }) => {
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-1/2 text-right mr-2">Do you belong <br />to City/Town/Village:</label>
-                    {/* <input type="text" placeholder="Do you belong to City/Town/Village" className=" p-2 border rounded-md" /> */}
                     <select className="w-60 p-2 border rounded-md" onChange={handleBelongToChange} value={formData.locationType}>
                         <option >Select</option>
                         <option value="City">City</option>

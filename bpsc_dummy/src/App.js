@@ -1,30 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import React, { useEffect, useContext } from 'react';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import Home from './Components/Home';
 import Registration from './Components/Registration';
 import ContactUs from './Components/ContactUs';
 import PrivateRoute from './Configuration/PrivateRoute';
 import Dashboard from './Components/Dashboard/Dashboard';
 import NotFoundPage from './NotFoundPage';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom';
+// import {  } from 'react-router-dom/cjs/react-router-dom';
+import { MyContext } from './ContextApis/MyContext';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-
+  const {isAuthenticated, setIsAuthenticated} = useContext(MyContext)
   useEffect(() => {
     const JSONToken = localStorage.getItem('token');
-    console.log(JSONToken)
     const userJSON = localStorage.getItem('user');
-    const isAuthenticated = JSONToken && userJSON;
-
-    setIsAuthenticated(isAuthenticated);
-  }, []);
-console.log(isAuthenticated)
+    setIsAuthenticated(!!(JSONToken && userJSON));
+  }, [setIsAuthenticated]);
+  
   return (
     <Router>
       <Switch>
-        <Route exact path="/">
+        <Route exact path ={"/"}>
+
           {isAuthenticated ? <Dashboard /> : <Home />}
         </Route>
         <Route path='/registration' component={Registration} />

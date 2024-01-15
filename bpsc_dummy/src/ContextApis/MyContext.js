@@ -11,6 +11,7 @@ const MyContextProvider = ({ children }) => {
   const [verified, SetVarified]=useState(false)
   const [initialData, setInitialData]=useState({})
   const [profileIfo, setProfileInfo]=useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   
   const updateValue = (newValue) => {
     setSomeValue(newValue);
@@ -29,7 +30,8 @@ const MyContextProvider = ({ children }) => {
       setInitialData,
       profileIfo, 
       setProfileInfo,
-      setUserInfo}}>
+      setUserInfo,
+      isAuthenticated, setIsAuthenticated}}>
       {children}
     </MyContext.Provider>
   );

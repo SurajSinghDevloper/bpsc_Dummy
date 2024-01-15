@@ -8,9 +8,10 @@ import TextToImage from '../Configuration/TextToImage'
 import {loginPost} from '../Configuration/ApiCalls'
 import '../CustomStyle.css'
 import { MyContext } from '../ContextApis/MyContext'
+import { setCookie } from '../Configuration/Cookies'
 
 const Home = () => {
-  const { setInitialData } = useContext(MyContext);
+  const { setInitialData, setIsAuthenticated } = useContext(MyContext);
   const [emailID, setemailID] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
@@ -66,30 +67,28 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = { emailID, password };
-
+  
     try {
       if (isValid) {
         alert('Captcha is validated!');
         if (emailID !== "" || password !== "") {
-          const resData =loginPost(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`,user)
-          if(resData){
-            setInitialData(resData)
-            history.push('/dashboard')
+          const resData = await loginPost(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`, user);
+          if (resData) {
+            // localStorage.setItem("user", JSON.stringify(resData.user));
+            setCookie("user",resData.user, 1)
+            setIsAuthenticated(true);
+            history.push('/dashboard');
           }
         }
       } else {
-        // Alert("All Fields Are Important");
-
         alert('Invalid Captcha! Please try again.');
         generateCaptcha();
       }
     } catch (error) {
       console.error("Error:", error);
     }
-
-    // onClose();
-    // Implement your login logic here using 'username' and 'password'
   };
+  
   useEffect(() => {
     generateCaptcha();
   }, []);
@@ -141,7 +140,7 @@ const Home = () => {
               {/* Captcha */}
               <div className='bg-blue-500 '>
                 <div className=' mt-2 p-2  flex justify-between'>
-                  <div className="captchatext select-none">
+                  <div className="captchatext select-none w-max">
                     <TextToImage text={captchaText} style={{ backgroundColor: 'white', fontWeight: '500px' }} />
                     <div className="absolute inset-x-0 inset-y-5 bottom-0 h-[2px] bg-slate-500 transform rotate-6"></div>
                   </div>
