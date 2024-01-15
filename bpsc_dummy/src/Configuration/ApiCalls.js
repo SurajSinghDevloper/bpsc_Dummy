@@ -41,9 +41,7 @@ export const loginPost = async (url, data) => {
     setCookie('user', userDetails, 1);
     setCookie('token', token, 1);
 
-    console.log(token);
     localStorage.setItem("token", token);
-    console.log(userDetails);
     localStorage.setItem("user", JSON.stringify(userDetails));
     return responseData;
   } catch (error) {
@@ -57,13 +55,13 @@ export const loginPost = async (url, data) => {
 
 export const postData = async (url, data) => {
     try {
+      const Authorization = localStorage.getItem("token");
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          // You can include additional headers if needed, like authorization headers
+          Authorization: `Bearer ${Authorization}`,
         },
-        body: JSON.stringify(data),
+        body: data,
       });
   
       if (!response.ok) {
@@ -82,10 +80,8 @@ export const postData = async (url, data) => {
 
   // GET request method
   export const getData = async (url) => {
-    console.log(url)
     try {
       const Authorization = localStorage.getItem("token");
-      console.log(Authorization)
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -106,4 +102,54 @@ export const postData = async (url, data) => {
     }
   };
   
-  
+  export const OtpPostData = async (url, data) => {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: data, // Include the data in the request body
+            // headers: {
+            //     Authorization: `Bearer ${Authorization}`,
+            // },
+        });
+
+        if (!response.ok) {
+            // Handle non-successful responses
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        return responseData;
+    } catch (error) {
+        console.error('Error making POST request:', error.message);
+        throw error;
+    }
+};
+
+export const registrationPostData = async (url, data) => {
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      // Throw an error to be caught in the calling function
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Log the response for debugging purposes
+
+    // Check if the response has any content before trying to parse it as JSON
+    const responseData = response.status !== 204 ? await response.json() : null;
+
+    return responseData;
+  } catch (error) {
+    console.error('Error making POST request:', error.message);
+    // Rethrow the error to be caught in the calling function
+    throw error;
+  }
+};
+

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState,useRef  } from 'react';
 import PersonLogo from '../../Assets/person.png';
 import Personal_Information from './Personal_Information';
 import Qualification_Information from './Qualification_Information';
@@ -8,48 +8,15 @@ import { faSave, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { MyContext } from '../../ContextApis/MyContext';
 
 
+
 const Profile = (props) => {
   const { userInfo } = useContext(MyContext);
-  console.log(userInfo)
-  const [formData, setFormData] = useState({
-    firstname: '',
-    father: '',
-    gender: '',
-    maritalStatus: '',
-    state: '',
-    city: '',
-    stateOfDomicile: '',
-    preferredLanguage: '',
-    middlename: '',
-    mother: '',
-    category: '',
-    mobile: '',
-    district: '',
-    address: '',
-    isDisability: false,
-    disabilityType: '',
-    disabilityRemark: '',
-    document: '',
-    permanentAddress: '',
-    lastname: '',
-    email: '',
-    nationality: '',
-    aadharNo: '',
-    pincode: '',
-    religion: '',
-    identificationMarks: '',
-    belongTo: '',
-  });
-
-  const handleFormChange = (field, value) => {
-    setFormData({ ...formData, [field]: value });
-  };
-
-  const handleSave = () => {
-    // Handle the save logic, e.g., make a POST request to your backend
-    console.log(formData);
-    // dispatch(personalInfoAction(formData))
-  };
+  const [savePersonalInfo, setSavePersonalInfo] = useState(false)
+  const forceUpdate = useRef(0);
+  const handleSavePersonalInfo = () => {
+    setSavePersonalInfo(true)
+    forceUpdate.current = 1 - forceUpdate.current;
+  }
   return (
     <>
 
@@ -61,13 +28,13 @@ const Profile = (props) => {
           alignItems: 'center',
           marginTop: '10px'
         }}>
-          <IDCard pInfo={userInfo}/>
+          <IDCard pInfo={userInfo} />
         </div>
         <hr className='text-black' />
         <div className='flex justify-between items-center bg-slate-200 p-1'>
           <h1 className='text-xl'>Profile Information</h1>
           <div className='space-x-2'>
-            <button onClick={handleSave} className='bg-green-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faSave} className='text-lg mr-2' />Save</button>
+            <button onClick={handleSavePersonalInfo} className='bg-green-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faSave} className='text-lg mr-2' />Save</button>
             <button className='bg-green-700 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faEdit} className='text-lg mr-2' />Edit</button>
             <button className='bg-red-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faTrash} className='text-lg mr-2' />Delete</button>
           </div>
@@ -78,8 +45,7 @@ const Profile = (props) => {
           alignItems: 'center',
         }}>
 
-          <Personal_Information formData={formData} onFormChange={handleFormChange} setFormData={setFormData} />
-
+          <Personal_Information saveInfo={savePersonalInfo} />
 
         </div>
 
@@ -119,13 +85,13 @@ const Profile = (props) => {
   );
 };
 
-const IDCard = ({pInfo}) => {
+const IDCard = ({ pInfo }) => {
   return (
     <div className="w-11/12  bg-white rounded-lg flex justify-between ">
       <div>
         <img className="w-48 h-32 rounded-full mx-auto" src={PersonLogo} alt="Profile" />
         <div className="text-center mt-4">
-          <p className="font-bold text-xl w-full"> {pInfo.firstname+" "+pInfo.middlename+" "+pInfo.lastname}</p>
+          <p className="font-bold text-xl w-full"> {pInfo.firstname + " " + pInfo.middlename + " " + pInfo.lastname}</p>
           <p className="text-gray-700 text-base">Username: {pInfo.username}</p>
           <p className="text-gray-700 text-base">DOB: {pInfo.dob}</p>
         </div>

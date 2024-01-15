@@ -3,6 +3,7 @@ import Layout from './LandingPages/Layout'
 import SignupSVG from '../Assets/SignupSVG.svg'
 import OTPModal from './OTPModal';
 import { useHistory } from 'react-router-dom';
+import { OtpPostData, postData, registrationPostData } from '../Configuration/ApiCalls';
 
 const Registration = () => {
     const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
@@ -10,14 +11,14 @@ const Registration = () => {
     const history = useHistory();
     const [formData, setFormData] = useState({
         firstName: '',
-        middleName: '',
-        lastName: '',
+        middlename: '',
+        lastname: '',
         dob: '',
         emailID: '',
-        mobileNo:'',
+        mobileNo: '',
         password: '',
     });
-   
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -28,17 +29,22 @@ const Registration = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formData.firstName !== "" || formData.middleName !== "" || formData.lastName !== "" || formData.emailID !== "" || formData.mobileNo !== "" || formData.dob !== "" || formData.password !== "") {
-            // dispatch(signup(formData));
-            history.push('/');
+        if (formData.firstName !== "" || formData.middlename !== "" || formData.lastname !== "" || formData.emailID !== "" || formData.mobileNo !== "" || formData.dob !== "" || formData.password !== "") {
+            try {
+                const res = await registrationPostData(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/registration`, formData);
+                if (res) {
+                }
+                history.push('/');
+            } catch (error) {
+                console.error('Error in handleSubmit:', error.message);
+                // Handle the error accordingly (e.g., display an error message to the user)
+            }
+        } else {
+            alert("All Fields are Mandatory !");
         }
-        else {
-            alert("All Fields are Mandatory !")
-        }
-        console.log('Form submitted:', formData);
         // You can redirect or perform further actions after submission
     };
-
+    
 
 
     const openOTPModal = () => {
@@ -51,18 +57,28 @@ const Registration = () => {
 
     const sendOTP = async () => {
         try {
-        //    dispatch(sendOtp(formData.emailID))
-           setSignupDisabled(false);
-         
+            const otpFormData = new FormData();
+            otpFormData.append("emailID", formData.emailID);
+    
+            // Add 'await' here to wait for the asynchronous operation to complete
+            const res = await OtpPostData(`${process.env.REACT_APP_BASE_URL}/otp/send-otp`, otpFormData);
+    
+
+                setSignupDisabled(false);  // Enable signup button on successful OTP response
         } catch (error) {
-          console.error('Error sending OTP:', error);
-          // Handle error accordingly (e.g., display a message to the user)
+            console.error('Error sending OTP:', error);
+            // Handle error accordingly (e.g., display a message to the user)
+            setSignupDisabled(false);  // Disable signup button on error
         }
     };
+    
+    
+    
     const handleVerifyClick = () => {
         openOTPModal(); // Open OTP Modal
-        // sendOTP(); 
-      };
+        sendOTP();
+        setSignupDisabled(false)
+    };
     return (
         <Layout>
 
@@ -93,30 +109,30 @@ const Registration = () => {
                                         className="block mr-2 w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
                                         placeholder="First Name"
                                     />
-                                    <label htmlFor="middleName" className="sr-only">
+                                    <label htmlFor="middlename" className="sr-only">
                                         Middle Name
                                     </label>
                                     <input
-                                        id="middleName"
-                                        name="middleName"
+                                        id="middlename"
+                                        name="middlename"
                                         type="text"
-                                        autoComplete="middleName"
+                                        autoComplete="middlename"
                                         required
-                                        value={formData.middleName}
+                                        value={formData.middlename}
                                         onChange={handleInputChange}
                                         className="block w-full mr-2 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
                                         placeholder="Middle Name"
                                     />
-                                    <label htmlFor="lastName" className="sr-only">
+                                    <label htmlFor="lastname" className="sr-only">
                                         Last Name
                                     </label>
                                     <input
-                                        id="lastName"
-                                        name="lastName"
+                                        id="lastname"
+                                        name="lastname"
                                         type="text"
-                                        autoComplete="lastName"
+                                        autoComplete="lastname"
                                         required
-                                        value={formData.lastName}
+                                        value={formData.lastname}
                                         onChange={handleInputChange}
                                         className="block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
                                         placeholder="Last Name"
@@ -149,7 +165,7 @@ const Registration = () => {
                                         type="text"
                                         autoComplete="mobileNo"
                                         required
-                                        value={formData.mobileNo||""}
+                                        value={formData.mobileNo || ""}
                                         onChange={handleInputChange}
                                         className="block w-full border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-yellow-500 focus:border-yellow-500"
                                         placeholder="Mobile"
@@ -195,13 +211,12 @@ const Registration = () => {
                                     disabled={signupDisabled}
                                     className={`w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${signupDisabled ? 'bg-gray-400' : 'bg-yellow-500 hover:bg-yellow-600'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500`}
 
-                                    // className="w-full py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
                                 >
                                     Sign up
                                 </button>
                             </div>
                         </form>
-                        <OTPModal isOpen={isOTPModalOpen} onClose={closeOTPModal} emailID={formData.emailID}/>
+                        <OTPModal isOpen={isOTPModalOpen} onClose={closeOTPModal} emailID={formData.emailID} />
                     </div>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { OtpPostData } from '../Configuration/ApiCalls';
 
 
 const OTPModal = ({ isOpen, onClose, emailID }) => {
@@ -26,20 +27,26 @@ const OTPModal = ({ isOpen, onClose, emailID }) => {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault();  
+  
     try {
       const formData = new FormData();
       formData.append('email', emailID);
       formData.append('otp', otp);
-      // dispatch(verifyOTP(formData));
-      onClose();
+      const res = await OtpPostData(`${process.env.REACT_APP_BASE_URL}/otp/verify-otp`, formData);
+      
+      if (res) {
+        alert("OTP Verified");
+        onClose();
+        setOTP('');
+      }
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      // Handle error accordingly (e.g., display a message to the user)
+        // Handle error accordingly (e.g., display a message to the user)
     }
   };
+  
   return (
     <div className={`fixed z-50 inset-0 overflow-y-auto ${isOpen ? 'block' : 'hidden'}`}>
       <div className="flex items-center justify-center min-h-screen">

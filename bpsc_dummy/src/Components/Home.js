@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Layout from './LandingPages/Layout'
 import containerLogo from '../Assets/login-box-bg.jpg'
 import loginLogo from '../Assets/login-heading-icon.png'
@@ -7,8 +7,10 @@ import { useHistory } from 'react-router-dom';
 import TextToImage from '../Configuration/TextToImage'
 import {loginPost} from '../Configuration/ApiCalls'
 import '../CustomStyle.css'
+import { MyContext } from '../ContextApis/MyContext'
 
 const Home = () => {
+  const { setInitialData } = useContext(MyContext);
   const [emailID, setemailID] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
@@ -71,6 +73,7 @@ const Home = () => {
         if (emailID !== "" || password !== "") {
           const resData =loginPost(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`,user)
           if(resData){
+            setInitialData(resData)
             history.push('/dashboard')
           }
         }
@@ -86,7 +89,6 @@ const Home = () => {
 
     // onClose();
     // Implement your login logic here using 'username' and 'password'
-    console.log('Login Clicked');
   };
   useEffect(() => {
     generateCaptcha();

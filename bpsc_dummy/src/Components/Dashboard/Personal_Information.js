@@ -1,21 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { getData } from '../../Configuration/ApiCalls';
 import { MyContext } from '../../ContextApis/MyContext';
+import { postData } from '../../Configuration/ApiCalls';
 
 
+const Personal_Information = ({ saveInfo }) => {
+    const usr = localStorage.getItem('user');
+    const userData = JSON.parse(usr);
+    const { setUserInfo, setProfileInfo, userInfo } = useContext(MyContext);
 
-const Personal_Information = ({ formData, onFormChange, setFormData }) => {
-    const [setIsDisability] = useState(false);
+    const [isDisability, setIsDisability] = useState(false);
     const [aadharNumber, setAadharNumber] = useState('');
     const [validationMessage, setValidationMessage] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [info, setInfo] = useState('');
-    const usr = localStorage.getItem('user')
-    const userData = JSON.parse(usr);
-    const { setUserInfo } = useContext(MyContext);
-    console.log(info)
 
-
+    const handleAadharNumberChange = (event) => {
+        const value = event.target.value;
+        setAadharNumber(value);
+    };
     const validateAadhar = (aadhar) => {
         const d = [
             [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -61,13 +63,6 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
 
         return inv[c] === 0;
     };
-
-    const handleAadharNumberChange = (event) => {
-        const value = event.target.value;
-        setAadharNumber(value);
-        // Optionally, you can perform other validations or updates here
-    };
-
     const handleAadharCheckClick = () => {
         const isValidAadhar = validateAadhar(aadharNumber);
         setValidationMessage(`Is Valid Aadhar Number: ${isValidAadhar}`);
@@ -75,24 +70,81 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
 
 
 
+    const [formData, setFormData] = useState({
+        firstname: '',
+        fname: '',
+        gender: '',
+        maritialStatus: '',
+        state: '',
+        cityOrVillage: '',
+        domicile: '',
+        pLanguage: '',
+        middlename: '',
+        mname: '',
+        category: '',
+        mobile: '',
+        district: '',
+        address: '',
+        disablity: '',
+        disablityType: '',
+        disablityRemark: '',
+        document: '',
+        permanentAddress: '',
+        lastname: '',
+        email: userInfo.email,
+        nationality: '',
+        aadharNo: aadharNumber,
+        pincode: '',
+        religion: '',
+        identification: '',
+        locationType: '',
+    });
 
-
-
-
+    useEffect(() => {
+        if (userInfo) {
+            setFormData({
+                firstname: userInfo.firstname || "",
+                fname: userInfo.fname || "",
+                gender: userInfo.gender || "",
+                maritialStatus: userInfo.maritialStatus || "",
+                state: userInfo.state || "",
+                cityOrVillage: userInfo.cityOrVillage || "",
+                domicile: userInfo.domicile || "",
+                pLanguage: userInfo.pLanguage || "",
+                middlename: userInfo.middlename || "",
+                mname: userInfo.mname || "",
+                category: userInfo.category || "",
+                mobile: userInfo.mobile || "",
+                district: userInfo.district || "",
+                address: userInfo.address || "",
+                disablity: userInfo.disablity || '',
+                disablityType: userInfo.disablityType || "",
+                disablityRemark: userInfo.disablityRemark || "",
+                permanentAddress: userInfo.permanentAddress || "",
+                lastname: userInfo.lastname || "",
+                email: userInfo.email || "",
+                nationality: userInfo.nationality || "",
+                aadharNo: userInfo.aadharNo || "",
+                pincode: userInfo.pincode || "",
+                religion: userInfo.religion || "",
+                identification: userInfo.identification || "",
+                locationType: userInfo.identification || ""
+            });
+        }
+    }, [userInfo]);
+    const onFormChange = (field, value) => {
+        setFormData({ ...formData, [field]: value });
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             if (usr !== null) {
                 try {
-                    // Assuming getData is an asynchronous function that returns a Promise
                     const resData = await getData(`${process.env.REACT_APP_BASE_URL}/api/v1/user/info/${userData.emailID}`);
-                    console.log(resData);
                     if (resData) {
-                        setInfo(resData)
-                        setUserInfo(resData)
+                        setUserInfo(resData);
+                        await setProfileInfo(resData);
                     }
-
-                    // dispatch({ type: 'SET_USER_INFO', payload: resData });
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
@@ -100,9 +152,28 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
         };
 
         fetchData();
-    }, [usr, userData.emailID]);
+    }, [setUserInfo, setProfileInfo, usr, userData.emailID]);
 
 
+        if (saveInfo === true) {
+            console.log("➡️➡️➡️➡️➡️➡️")
+            const fData = new FormData();
+            for (const key in formData) {
+                console.log("➡️➡️➡️➡️➡️➡️")
+                if (key !== 'document') {
+                    fData.append(key, formData[key]);
+                }
+            }
+            console.log("➡️➡️➡️➡️➡️➡️",fData)
+            const res = postData(`${process.env.REACT_APP_BASE_URL}/api/v1/user/new-user/info/${userInfo.email}`, fData);
+            if (res) {
+                alert('PersonalData Saved Successfully');
+                return;
+            }
+            
+        }
+   
+  
 
     const handleDisabilityChange = (event) => {
         const value = event.target.value === 'true';
@@ -126,7 +197,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
 
     const handleMaritalStatus = (event) => {
         handleInputChange('maritalStatus', event.target.value)
-    }
+    };
 
     const handleNationalityChange = (event) => {
         handleInputChange('nationality', event.target.value);
@@ -137,15 +208,16 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
     };
 
     const handleBelongToChange = (event) => {
-        handleInputChange('belongTo', event.target.value);
+        handleInputChange('locationType', event.target.value);
     };
 
     const handleInputChange = (field, value) => {
         setFormData({ ...formData, [field]: value });
     };
     const handleGenderChange = (event) => {
-        handleInputChange('belongTo', event.target.value);
+        handleInputChange('gender', event.target.value);
     };
+
     return (
         <>
             <div className=' '>
@@ -153,7 +225,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Firstname:</label>
                     <input type="text"
                         name='firstname'
-                        value={formData.firstname || info.firstname}
+                        value={formData.firstname}
                         onChange={(e) => onFormChange('firstname', e.target.value)}
                         placeholder="Firstname"
                         className=" p-2 border rounded-md" />
@@ -162,15 +234,15 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Father:</label>
                     <input type="text"
                         name='father'
-                        value={formData.father || info.fname}
-                        onChange={(e) => onFormChange('father', e.target.value)}
+                        value={formData.fname}
+                        onChange={(e) => onFormChange('fname', e.target.value)}
                         placeholder="Father"
                         className=" p-2 border rounded-md" />
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-1/2 text-right mr-2">Gender :</label>
 
-                    <select className="w-60 p-2 border rounded-md" onChange={handleGenderChange} value={formData.gender || info.gender}>
+                    <select className="w-60 p-2 border rounded-md" onChange={handleGenderChange} value={formData.gender}>
                         <option >Select</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -179,7 +251,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-1/2 text-right mr-2">Maritial Status:</label>
-                    <select className="w-60 p-2 border rounded-md" onChange={handleMaritalStatus} value={formData.maritalStatus || info.gender}>
+                    <select className="w-60 p-2 border rounded-md" onChange={handleMaritalStatus} value={formData.maritialStatus}>
                         <option >Select</option>
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
@@ -191,7 +263,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">State:</label>
                     <input type="text"
                         name='state'
-                        value={formData.state || info.state}
+                        value={formData.state}
                         onChange={(e) => onFormChange('state', e.target.value)}
                         placeholder="State" className=" p-2 border rounded-md" />
                 </div>
@@ -199,24 +271,24 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">City / Village:</label>
                     <input type="text"
                         name='city'
-                        value={formData.city || info.cityOrVillage}
-                        onChange={(e) => onFormChange('city', e.target.value)}
+                        value={formData.cityOrVillage}
+                        onChange={(e) => onFormChange('cityOrVillage', e.target.value)}
                         placeholder="City / Village" className=" p-2 border rounded-md" />
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-full text-right mr-2">State Of Domicile:</label>
                     <input type="text"
-                        name='stateOfDomicile'
-                        value={formData.stateOfDomicile || info.domicile}
-                        onChange={(e) => onFormChange('stateOfDomicile', e.target.value)}
+                        name='domicile'
+                        value={formData.domicile}
+                        onChange={(e) => onFormChange('domicile', e.target.value)}
                         placeholder="State Of Domicile" className=" p-2 border rounded-md" />
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-full text-right mr-2">Prefered Language:</label>
                     <input type="text"
                         name='preferredLanguage'
-                        value={formData.preferredLanguage || info.pLanguage}
-                        onChange={(e) => onFormChange('preferredLanguage', e.target.value)}
+                        value={formData.pLanguage}
+                        onChange={(e) => onFormChange('pLanguage', e.target.value)}
                         placeholder="Prefered Language" className=" p-2 border rounded-md" />
                 </div>
             </div>
@@ -225,7 +297,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Middlename:</label>
                     <input type="text"
                         name='middlename'
-                        value={formData.middlename || info.middlename}
+                        value={formData.middlename}
                         onChange={(e) => onFormChange('middlename', e.target.value)}
                         placeholder="Middlename" className=" p-2 border rounded-md" />
                 </div>
@@ -233,13 +305,13 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Mother:</label>
                     <input type="text"
                         name='mother'
-                        value={formData.mother || info.mname}
-                        onChange={(e) => onFormChange('mother', e.target.value)}
+                        value={formData.mname}
+                        onChange={(e) => onFormChange('mname', e.target.value)}
                         placeholder="Mother" className=" p-2 border rounded-md" />
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-1/2 text-right mr-2">Category:</label>
-                    <select className="w-60 p-2 border rounded-md" onChange={handleCategoryChange} value={formData.category || info.category}>
+                    <select className="w-60 p-2 border rounded-md" onChange={handleCategoryChange} value={formData.category}>
                         <option >Select</option>
                         <option value={"GEN"}>GEN</option>
                         <option value={"ST"}>ST</option>
@@ -252,7 +324,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Mobile :</label>
                     <input type="text"
                         name='mobile'
-                        value={formData.mobile || info.mobile}
+                        value={formData.mobile}
                         onChange={(e) => onFormChange('mobile', e.target.value)}
                         placeholder="Mobile" className=" p-2 border rounded-md" />
                 </div>
@@ -260,7 +332,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">District:</label>
                     <input type="text"
                         name='district'
-                        value={formData.district || info.district}
+                        value={formData.district}
                         onChange={(e) => onFormChange('district', e.target.value)}
                         placeholder="District" className=" p-2 border rounded-md" />
                 </div>
@@ -268,14 +340,15 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Address:</label>
                     <input type="text"
                         name='address'
-                        value={formData.address || info.address}
+                        value={formData.address}
                         onChange={(e) => onFormChange('address', e.target.value)}
                         placeholder="Address" className=" p-2 border rounded-md" />
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-1/2 text-right mr-2">Disablity :</label>
                     {/* <input type="text" placeholder="Disablity" className=" p-2 border rounded-md" /> */}
-                    <select className="w-60 p-2 border rounded-md" onChange={handleDisabilityChange} value={formData.isDisability.toString() || info.isDisability}>
+                    <select className="w-60 p-2 border rounded-md" onChange={handleDisabilityChange} value={formData.disablity && formData.disablity.toString()}>
+
                         <option >Select</option>
                         <option value="true">Yes</option>
                         <option value="false">No</option>
@@ -293,7 +366,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                                     <input
                                         type="text"
                                         id="disabilityType"
-                                        value={formData.disabilityType || info.disabilityType}
+                                        value={formData.disablityType}
                                         onChange={(e) => onFormChange('disabilityType', e.target.value)}
                                         className="w-full p-2 border rounded-md"
                                     />
@@ -305,7 +378,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                                     <input
                                         type="text"
                                         id="disabilityRemark"
-                                        value={formData.disabilityRemark || info.disabilityRemark}
+                                        value={formData.disablityRemark}
                                         onChange={(e) => onFormChange('disabilityRemark', e.target.value)}
                                         className="w-full p-2 border rounded-md"
                                     />
@@ -343,7 +416,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Permanent Address:</label>
                     <input type="text"
                         id='permanentAddress'
-                        value={formData.permanentAddress || info.permanentAddress}
+                        value={formData.permanentAddress}
                         onChange={(e) => onFormChange('permanentAddress', e.target.value)}
                         placeholder="Permanent Address" className=" p-2 border rounded-md" />
                 </div>
@@ -353,7 +426,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Lastname:</label>
                     <input type="text"
                         id='lastname'
-                        value={formData.lastname || info.lastname}
+                        value={formData.lastname}
                         onChange={(e) => onFormChange('lastname', e.target.value)}
                         placeholder="Lastname" className=" p-2 border rounded-md" />
                 </div>
@@ -361,14 +434,14 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">E-mail Id:</label>
                     <input type="text"
                         id='email'
-                        value={formData.email || info.email}
+                        value={formData.email}
                         onChange={(e) => onFormChange('email', e.target.value)}
                         placeholder="E-mail Id" className=" p-2 border rounded-md" />
                 </div>
                 <div className="flex items-center mb-4 ">
                     <label className="w-1/2 text-right mr-2">Nationality:</label>
 
-                    <select className="w-60 p-2 border rounded-md" onChange={handleNationalityChange} value={formData.nationality || info.nationality}>
+                    <select className="w-60 p-2 border rounded-md" onChange={handleNationalityChange} value={formData.nationality}>
                         <option value="">Select</option>
                         <option value="Indian">Indian</option>
                         <option value="NRI">NRI</option>
@@ -381,7 +454,7 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                         <input
                             type="text"
                             id="aadharNo"
-                            value={aadharNumber || info.aadharNo}
+                            value={aadharNumber}
                             onChange={handleAadharNumberChange}
                             onBlur={handleAadharCheckClick}
                             placeholder="Aadhar No"
@@ -395,13 +468,13 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Pincode:</label>
                     <input type="text"
                         id='pincode'
-                        value={formData.pincode || info.pincode}
+                        value={formData.pincode}
                         onChange={(e) => onFormChange('pincode', e.target.value)}
                         placeholder="Pincode" className=" p-2 border rounded-md" />
                 </div>
                 <div className="flex items-center mb-4 ">
                     <label className="w-1/2 text-right ">Religion:</label>
-                    <select className="w-60 p-2 border rounded-md" onChange={handleReligionChange} value={formData.religion || info.religion}>
+                    <select className="w-60 p-2 border rounded-md" onChange={handleReligionChange} value={formData.religion}>
                         <option>Select</option>
                         <option value={"Hindu"}>Hindu</option>
                         <option value={"Muslim"}>Muslim</option>
@@ -416,14 +489,14 @@ const Personal_Information = ({ formData, onFormChange, setFormData }) => {
                     <label className="w-full text-right mr-2">Identification marks:</label>
                     <input type="text"
                         id='identificationMarks'
-                        value={formData.identificationMarks || info.identification}
-                        onChange={(e) => onFormChange('identificationMarks', e.target.value)}
+                        value={formData.identification}
+                        onChange={(e) => onFormChange('identification', e.target.value)}
                         placeholder="Identification marks" className=" p-2 border rounded-md" />
                 </div>
                 <div className="flex items-center mb-4">
                     <label className="w-1/2 text-right mr-2">Do you belong <br />to City/Town/Village:</label>
                     {/* <input type="text" placeholder="Do you belong to City/Town/Village" className=" p-2 border rounded-md" /> */}
-                    <select className="w-60 p-2 border rounded-md" onChange={handleBelongToChange} value={formData.belongTo || info.locationType}>
+                    <select className="w-60 p-2 border rounded-md" onChange={handleBelongToChange} value={formData.locationType}>
                         <option >Select</option>
                         <option value="City">City</option>
                         <option value="Town">Town</option>
