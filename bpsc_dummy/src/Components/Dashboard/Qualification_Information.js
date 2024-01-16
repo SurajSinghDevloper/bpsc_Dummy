@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { postData } from '../../Configuration/ApiCalls';
+import { MyContext } from '../../ContextApis/MyContext';
 
 const Qualification_Information = () => {
+    const { userInfo } = useContext(MyContext);
     const [qualificationData, setQualificationData] = useState({
         '10': { name: '10', specialization: '', school: '', marks: '', year: '' },
         '12': { name: '12', specialization: '', school: '', marks: '', year: '' },
@@ -8,6 +11,38 @@ const Qualification_Information = () => {
         'PG': { name: 'PG', specialization: '', school: '', marks: '', year: '' },
         'OTHER': { name: 'OTHER', specialization: '', school: '', marks: '', year: '' },
     });
+
+
+    useEffect(() => {
+        if (userInfo.qualificationType && userInfo.qualificationType.length > 0) {
+            const initialQualificationData = {};
+            const initialAcademicDocuments = {};
+    
+            userInfo.qualificationType.forEach(({ qualificationId, name, specialization, school, marks, year }) => {
+                initialQualificationData[qualificationId] = {
+                    name: name,
+                    specialization: specialization,
+                    school: school,
+                    marks: marks,
+                    year: year,
+                };
+    
+                initialAcademicDocuments[qualificationId] = {
+                    name: name,
+                    marksSheet: null,
+                    viewDocuments: '',
+                };
+            });
+    
+            setQualificationData(initialQualificationData);
+            setAcademicDocuments(initialAcademicDocuments);
+        }
+    }, [userInfo.qualificationType]);
+    
+
+
+
+
 
     const handleQualificationChange = (key, field, event) => {
         setQualificationData((prevData) => ({
@@ -46,30 +81,36 @@ const Qualification_Information = () => {
             },
         }));
     };
-    
+    console.log(userInfo)
     const handleFormSubmit = async () => {
+        console.log(qualificationData)
+        const requestData = Object.values(qualificationData).map(({ name, specialization, school, marks, year }) => ({
+            name,
+            specialization,
+            school,
+            marks,
+            year,
+          }));
+      
         try {
-            const response = await fetch('YOUR_API_ENDPOINT', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add any additional headers if needed
-                },
-                body: JSON.stringify({
-                    qualificationData,
-                    academicDocuments,
-                }),
-            });
-
+            const Authorization = localStorage.getItem("token");
+           const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/qualification-types/qualification?username=${userInfo.username}`, {
+            method: "POST",
+            headers: {
+               Authorization: `Bearer ${Authorization}`,
+              'Content-Type': 'application/json', 
+            },
+            body: JSON.stringify( requestData),
+          });
             if (response.ok) {
-                // Handle success, e.g., show a success message
                 
+                console.log(response)
             } else {
-                // Handle error, e.g., show an error message
+                
                 console.error('API request failed');
             }
         } catch (error) {
-            // Handle network error or other exceptions
+           
             console.error('Error:', error);
         }
     };

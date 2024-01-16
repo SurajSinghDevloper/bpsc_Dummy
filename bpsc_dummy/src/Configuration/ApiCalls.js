@@ -56,6 +56,7 @@ export const loginPost = async (url, data) => {
 export const postData = async (url, data) => {
     try {
       const Authorization = localStorage.getItem("token");
+      console.log(Authorization)
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -63,7 +64,7 @@ export const postData = async (url, data) => {
         },
         body: data,
       });
-  
+      console.log(Authorization)
       if (!response.ok) {
         // Handle non-successful responses
         throw new Error(`HTTP error! Status: ${response.status}`);
