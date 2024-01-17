@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { postData } from '../../Configuration/ApiCalls';
 import { MyContext } from '../../ContextApis/MyContext';
 
-const Qualification_Information = () => {
+const Qualification_Information = ({handleFormSubmit}) => {
     const { userInfo } = useContext(MyContext);
     const [qualificationData, setQualificationData] = useState({
         '10': { name: '10', specialization: '', school: '', marks: '', year: '' },
@@ -17,7 +16,7 @@ const Qualification_Information = () => {
         if (userInfo.qualificationType && userInfo.qualificationType.length > 0) {
             const initialQualificationData = {};
             const initialAcademicDocuments = {};
-    
+
             userInfo.qualificationType.forEach(({ qualificationId, name, specialization, school, marks, year }) => {
                 initialQualificationData[qualificationId] = {
                     name: name,
@@ -26,19 +25,19 @@ const Qualification_Information = () => {
                     marks: marks,
                     year: year,
                 };
-    
+
                 initialAcademicDocuments[qualificationId] = {
                     name: name,
                     marksSheet: null,
                     viewDocuments: '',
                 };
             });
-    
+
             setQualificationData(initialQualificationData);
             setAcademicDocuments(initialAcademicDocuments);
         }
     }, [userInfo.qualificationType]);
-    
+
 
 
 
@@ -82,38 +81,45 @@ const Qualification_Information = () => {
         }));
     };
     console.log(userInfo)
-    const handleFormSubmit = async () => {
+    console.log(handleFormSubmit)
+
+    if (handleFormSubmit === true) {
         console.log(qualificationData)
-        const requestData = Object.values(qualificationData).map(({ name, specialization, school, marks, year }) => ({
-            name,
-            specialization,
-            school,
-            marks,
-            year,
-          }));
-      
-        try {
-            const Authorization = localStorage.getItem("token");
-           const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/qualification-types/qualification?username=${userInfo.username}`, {
-            method: "POST",
-            headers: {
-               Authorization: `Bearer ${Authorization}`,
-              'Content-Type': 'application/json', 
-            },
-            body: JSON.stringify( requestData),
-          });
-            if (response.ok) {
-                
-                console.log(response)
-            } else {
-                
-                console.error('API request failed');
+        const handleUserQuali = async () => {
+            const requestData = Object.values(qualificationData).map(({ name, specialization, school, marks, year }) => ({
+                name,
+                specialization,
+                school,
+                marks,
+                year,
+            }));
+
+            try {
+                const Authorization = localStorage.getItem("token");
+                const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/qualification-types/qualification?username=${userInfo.username}`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${Authorization}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                });
+                if (response.ok) {
+
+                    console.log(response)
+                } else {
+
+                    console.error('API request failed');
+                }
+            } catch (error) {
+
+                console.error('Error:', error);
             }
-        } catch (error) {
-           
-            console.error('Error:', error);
         }
-    };
+        handleUserQuali();
+        return;
+    }
+
 
     return (
         <>
@@ -184,7 +190,7 @@ const Qualification_Information = () => {
                         <thead className='border'>
                             <tr>
                                 <td className='text-lg border text-center'>Qualification Name</td>
-                                <td className='text-lg border text-center'>Marks Sheet Upload</td>
+                                <td className='text-lg border text-center'>Marks Sheet Upload In only PDF </td>
                                 <td className='text-lg border text-center'>View Uploaded Documents</td>
                             </tr>
                         </thead>
@@ -218,9 +224,9 @@ const Qualification_Information = () => {
                             ))}
                         </tbody>
                     </table>
-                    <button className='p-5 bg-slate-400' onClick={handleFormSubmit}>SUBMIT FORM</button>
+                    {/* <button className='p-5 bg-slate-400' onClick={handleFormSubmit}>SUBMIT FORM</button> */}
                 </div>
-                
+
             </div>
         </>
     )

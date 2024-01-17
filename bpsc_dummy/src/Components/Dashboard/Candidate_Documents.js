@@ -6,7 +6,7 @@ const Candidate_Documents = () => {
             <thead className='border '>
                 <tr >
                     <td className='text-lg border text-center'>Documents</td>
-                    <td className='text-lg border text-center'>Upload</td>
+                    <td className='text-lg border text-center'>Upload Document in PDF</td>
                     <td className='text-lg border text-center'>View Document</td>
                     
                 </tr>

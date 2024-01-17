@@ -12,9 +12,15 @@ import { MyContext } from '../../ContextApis/MyContext';
 const Profile = (props) => {
   const { userInfo } = useContext(MyContext);
   const [savePersonalInfo, setSavePersonalInfo] = useState(false)
+  const [handleFormSubmitQualification, setHandleFormSubmitQualification]=useState(false)
   const forceUpdate = useRef(0);
   const handleSavePersonalInfo = () => {
     setSavePersonalInfo(true)
+    forceUpdate.current = 1 - forceUpdate.current;
+  }
+  const handleQualification = ()=>{
+    console.log("➡️➡️➡️➡️")
+    setHandleFormSubmitQualification(true)
     forceUpdate.current = 1 - forceUpdate.current;
   }
   return (
@@ -53,14 +59,14 @@ const Profile = (props) => {
         <div className='flex justify-between items-center bg-slate-200 p-1'>
           <h1 className='text-xl'>Qualification Information</h1>
           <div className='space-x-2'>
-            <button className='bg-green-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faSave} className='text-lg mr-2' />Save</button>
+            <button onClick={handleQualification} className='bg-green-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faSave} className='text-lg mr-2' />Save</button>
             <button className='bg-green-700 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faEdit} className='text-lg mr-2' />Edit</button>
             <button className='bg-red-400 rounded-md p-1 text-white text-lg'><FontAwesomeIcon icon={faTrash} className='text-lg mr-2' />Delete</button>
           </div>
         </div>
 
         <div className='mt-5' >
-          <Qualification_Information />
+        {true &&<Qualification_Information handleFormSubmit={handleFormSubmitQualification} />}
         </div>
         <hr className='text-black mt-3' />
         <div className='flex justify-between items-center bg-slate-200 p-1'>
