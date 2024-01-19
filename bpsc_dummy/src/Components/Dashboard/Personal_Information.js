@@ -102,8 +102,6 @@ const Personal_Information = ({ saveInfo }) => {
         locationType: '',
     });
 
-    console.log(formData)
-
     useEffect(() => {
         if (userInfo) {
             setFormData({

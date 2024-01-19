@@ -8,11 +8,14 @@ const EventList = () => {
         <thead className='bg-slate-300  border border-black'>
             <tr className='border border-black'>
                 <td>Sl. No</td>
-                <td>Vacany Code</td>
-                <td>Particular</td>
+                <td>Advertisment Number</td>
+                <td>Name of the Examination</td>
+                
                 <td>Form Opening</td>
                 <td>Form Closing</td>
+                <td>Payment Last Date</td>
                 <td>Read Information</td>
+                <td>Download Advertisment</td>
                 <td>Apply</td>
             </tr>
         </thead>

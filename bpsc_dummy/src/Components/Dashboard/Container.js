@@ -2,6 +2,7 @@ import React from "react";
 import Profile from "./Profile";
 import Navbar from "./Navbar";
 import EventList from "./EventList";
+import PaymentForm from "./PaymentForm";
 
 const Container = ({ activePage }) => {
 
@@ -15,7 +16,7 @@ const Container = ({ activePage }) => {
       case 'Submitted Form':
         return <div>OOPS Submitted Form is Under Construction</div>;
       case 'Payment':
-        return <div>OOPS Payment Form is Under Construction</div>;
+        return <PaymentForm/>;
       case 'Admit-Card':
         return <div>OOPS Admit-Card Form is Under Construction</div>;
       case 'Submitted Form Status':
