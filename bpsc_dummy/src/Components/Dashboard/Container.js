@@ -3,27 +3,28 @@ import Profile from "./Profile";
 import Navbar from "./Navbar";
 import EventList from "./EventList";
 import PaymentForm from "./PaymentForm";
+import FormCriteria from "./FormCriteria";
 
-const Container = ({ activePage }) => {
-
-
+const Container = ({ activePage, setActivePage }) => {
   const renderPage = () => {
     switch (activePage) {
-      case 'Dashboard':
+      case "Dashboard":
         return <Profile />;
-      case 'Event List':
-        return <EventList />;
-      case 'Submitted Form':
+      case "Event List":
+        return <EventList setActivePage={setActivePage} />;
+      case "Submitted Form":
         return <div>OOPS Submitted Form is Under Construction</div>;
-      case 'Payment':
-        return <PaymentForm/>;
-      case 'Admit-Card':
+      case "Payment":
+        return <PaymentForm />;
+      case "FormCriteria":
+        return <FormCriteria />;
+      case "Admit-Card":
         return <div>OOPS Admit-Card Form is Under Construction</div>;
-      case 'Submitted Form Status':
+      case "Submitted Form Status":
         return <div>OOPS Submitted Form Status is Under Construction</div>;
-      case 'Help':
+      case "Help":
         return <div>OOPS Help Form is Under Construction</div>;
-      case 'FAQs':
+      case "FAQs":
         return <div>OOPS FAQs Form is Under Construction</div>;
       // Add cases for other pages
       default:
