@@ -18,6 +18,20 @@ const Qualification_Information = ({handleFormSubmit}) => {
         'OTHER': null,
     });
 
+    useEffect(() =>{
+        if(Object.keys(userInfo).length>0){
+            const updatedInfo = {
+                '10': userInfo.qualificationDoc.tenthDoc,
+                '12': userInfo.qualificationDoc.twelethDoc,
+                'UG': userInfo.qualificationDoc.ugDoc,
+                'PG': userInfo.qualificationDoc.pgDoc,
+                'OTHER': userInfo.qualificationDoc.otherDoc,  
+            }
+    
+            setUploadedFiles(updatedInfo)
+        }
+    
+    },[userInfo])
 
     useEffect(() => {
         if (userInfo.qualificationType && userInfo.qualificationType.length > 0) {
@@ -99,33 +113,6 @@ const Qualification_Information = ({handleFormSubmit}) => {
         return;
     }
 
-    // const handleUserQualiDoc = async () => {
-    //     const formData = new FormData();
-
-    //     // Add academic documents to FormData
- 
-
-    //     try {
-    //         const Authorization = localStorage.getItem("token");
-    //         console.log("➡️➡️➡️➡️",formData)
-    //         const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/qualification-types/save`, {
-    //             method: "POST",
-    //             headers: {
-    //                 Authorization: `Bearer ${Authorization}`,
-    //             },
-    //             body: formData,
-    //         });
-
-    //         if (response.ok) {
-    //             console.log(response);
-    //         } else {
-    //             console.error('API request failed');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // };
-// for file section
 
 
 const handleFileChange = async (key, event) => {
@@ -161,29 +148,30 @@ const handleFileChange = async (key, event) => {
   };
   
 
-
-const displayFile = async (key) => {
-    try {
-        const Authorization = localStorage.getItem('token');
-        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/qualification-types/display?documentType=${key}&username=${userInfo.username}`, {
+  const displayFile = async (key, value) => {
+    console.log(value)
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/files/view/${value}`, {
             method: 'GET',
-            headers: {
-                Authorization: `Bearer ${Authorization}`,
-            },
         });
 
         if (response.ok) {
-            // Assuming the backend returns the file content
             const fileContent = await response.blob();
-            const fileURL = URL.createObjectURL(fileContent);
-            window.open(fileURL, '_blank');
+
+            if (fileContent.type === 'application/pdf') {
+                const fileURL = URL.createObjectURL(fileContent);
+                window.open(fileURL, '_blank');
+            } else {
+                console.error('Invalid file format. Only PDF files can be viewed.');
+            }
         } else {
-            console.error('Failed to retrieve file');
+            console.error(`Failed to retrieve ${key} document`);
+
         }
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    
 };
+
+
+
 
 const deleteFile = async (key) => {
     try {
@@ -284,22 +272,26 @@ const deleteFile = async (key) => {
                 </tr>
             </thead>
             <tbody className='mt-2'>
-                {Object.keys(uploadedFiles).map((key) => (
-                    <tr key={key} className='border'>
-                        <td className='border p-1'>
-                            <input type='text' className='text-center' value={key} readOnly />
-                        </td>
-                        <td className='border'>
-                            <input type='file' className='w-full' onChange={(e) => handleFileChange(key, e)} />
-                        </td>
-                        <td className='border'>
-                            <button onClick={() => displayFile(key)}>View</button>
-                        </td>
-                        <td className='border'>
-                            <button onClick={() => deleteFile(key)}>Delete</button>
-                        </td>
-                    </tr>
-                ))}
+
+            {Object.keys(uploadedFiles).map((key) => (
+    <tr key={key} className='border'>
+        <td className='border p-1'>
+            <input type='text' className='text-center' value={key} readOnly />
+        </td>
+        <td className='border'>
+            <input type='file' className='w-full' onChange={(e) => handleFileChange(key, e)} />
+        </td>
+        <td className='border justify-center'>
+            {uploadedFiles[key] && (
+                <button className='bg-green-400 text-white p-1 w-full'  onClick={() => displayFile(key, uploadedFiles[key])}>View</button>
+            )}
+        </td>
+        <td className='border'>
+            <button onClick={() => deleteFile(key)}>Delete</button>
+        </td>
+    </tr>
+))}
+
             </tbody>
         </table>
                     {/* <button className='p-5 bg-slate-400' onClick={handleFormSubmit}>SUBMIT FORM</button> */}
