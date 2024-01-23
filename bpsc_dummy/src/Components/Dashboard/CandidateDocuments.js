@@ -46,8 +46,8 @@ const CandidateDocuments = () => {
         <tbody className="mt-2">
           {Object.keys(uploadedFiles).map((ele, key) => (
             <tr key={key} className="border">
-              <td className="text-lg border text-center">{ele}</td>
-              <td className="border">
+              <td className="text-lg border text-center w-2/5">{ele}</td>
+              <td className="border w-2/5 p-2">
                 <UploadModal
                   conditionToShow={uploadedFiles[ele]}
                   fileToView={uploadedFiles[ele]}

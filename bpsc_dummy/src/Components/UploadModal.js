@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { MyContext } from "../ContextApis/MyContext";
+import { Notify } from "../Configuration/Notify";
 
 const UploadModal = ({
   conditionToShow,
@@ -31,6 +32,7 @@ const UploadModal = ({
     });
     if (response.status === 200) {
       const resText = await response.text();
+      Notify("success", "Document Uploaded Successfully");
       setFormData((prevFormData) => ({
         ...prevFormData,
         [keyName]: resText,
@@ -53,6 +55,7 @@ const UploadModal = ({
         body: formData,
       });
       if (response.status === 200) {
+        Notify("warning", "Document Deleted Successfully");
         setFormData((prevFormData) => ({
           ...prevFormData,
           [keyName]: "",
@@ -61,9 +64,9 @@ const UploadModal = ({
     })();
   };
   return conditionToShow ? (
-    <div className="flex flex-row">
+    <div className="flex flex-row space-x-7">
       <a
-        className="cursor-pointer my-auto ml-2"
+        className="cursor-pointer my-auto ml-2 w-4/8  bg-green-600 text-white p-1 rounded-lg"
         href={`${process.env.REACT_APP_BASE_URL}/api/files/view/${fileToView}`}
         target="_blank"
         rel="noreferrer"
@@ -71,11 +74,12 @@ const UploadModal = ({
         View Document
       </a>
       <div
-        className="ml-2 my-auto cursor-pointer"
+        className="cursor-pointer w-1/5 bg-red-600 text-white p-1 rounded-lg mr-2"
         name="section2f"
         onClick={() => handleDocDelete(fileToDelete)}
       >
         <FontAwesomeIcon icon={faTrash} className="text-lg mr-2" />
+        Delete File
       </div>
     </div>
   ) : (
@@ -84,7 +88,7 @@ const UploadModal = ({
         text-black/80
         rounded-md
         cursor-pointer
-        shadow-xl shadow-slate-300/60 p-2"
+        shadow-xl shadow-slate-300/60 p-1"
       title={conditionToShow ? fileToView : ""}
       onChange={(e) => handleDocUpload(e)}
     >

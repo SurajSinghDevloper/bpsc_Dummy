@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { OtpPostData } from '../Configuration/ApiCalls';
+import React, { useState, useEffect } from "react";
 
+import { Notify } from "../Configuration/Notify";
 
 const OTPModal = ({ isOpen, onClose, emailID }) => {
-  const [otp, setOTP] = useState('');
+  const [otp, setOTP] = useState("");
   const [timer, setTimer] = useState(60);
 
   const handleInputChange = (e) => {
@@ -24,31 +24,44 @@ const OTPModal = ({ isOpen, onClose, emailID }) => {
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();  
-  
+    e.preventDefault();
+
     try {
       const formData = new FormData();
-      formData.append('email', emailID);
-      formData.append('otp', otp);
-      const res = await OtpPostData(`${process.env.REACT_APP_BASE_URL}/otp/verify-otp`, formData);
-      
-      if (res) {
-        alert("OTP Verified");
+      formData.append("email", emailID);
+      formData.append("otp", otp);
+      const res = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/otp/verify-otp`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (res.status === 200) {
+        Notify("success", "OTP Verified");
         onClose();
-        setOTP('');
+        setOTP("");
       }
     } catch (error) {
-      console.error('Error verifying OTP:', error);
-        // Handle error accordingly (e.g., display a message to the user)
+      Notify("error", "Not Verified");
+      console.error("Error verifying OTP:", error);
+      // Handle error accordingly (e.g., display a message to the user)
     }
   };
-  
+
   return (
-    <div className={`fixed z-50 inset-0 overflow-y-auto ${isOpen ? 'block' : 'hidden'}`}>
+    <div
+      className={`fixed z-50 inset-0 overflow-y-auto ${
+        isOpen ? "block" : "hidden"
+      }`}
+    >
       <div className="flex items-center justify-center min-h-screen">
         <div className="fixed inset-0 bg-black opacity-50"></div>
         <div className="z-50 bg-white p-8 w-full max-w-md mx-auto rounded-lg shadow-xl">
@@ -58,7 +71,9 @@ const OTPModal = ({ isOpen, onClose, emailID }) => {
           >
             X
           </button>
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">OTP Verification</h2>
+          <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">
+            OTP Verification
+          </h2>
           <p>OTP has been sent to your email. Please check your mail.</p>
           <form onSubmit={handleSubmit} className="space-y-4 mt-2">
             <div>

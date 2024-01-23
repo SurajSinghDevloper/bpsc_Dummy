@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
-import PersonLogo from "../../Assets/person.png";
+import React, { useContext, useEffect, useState } from "react";
 import PersonalInformation from "./PersonalInformation";
 import QualificationInformation from "./QualificationInformation";
 import CandidateDocuments from "./CandidateDocuments";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { MyContext } from "../../ContextApis/MyContext";
 
 const Profile = (props) => {
@@ -94,20 +93,6 @@ const Profile = (props) => {
         <hr className="text-black mt-3" />
         <div className="flex justify-between items-center bg-slate-200 p-1">
           <h1 className="text-xl">Candidate Documents</h1>
-          {/* <div className="space-x-2">
-            <button className="bg-green-400 rounded-md p-1 text-white text-lg">
-              <FontAwesomeIcon icon={faSave} className="text-lg mr-2" />
-              Save
-            </button>
-            <button className="bg-green-700 rounded-md p-1 text-white text-lg">
-              <FontAwesomeIcon icon={faEdit} className="text-lg mr-2" />
-              Edit
-            </button>
-            <button className="bg-red-400 rounded-md p-1 text-white text-lg">
-              <FontAwesomeIcon icon={faTrash} className="text-lg mr-2" />
-              Delete
-            </button>
-          </div> */}
         </div>
         <div className="mt-5">
           <CandidateDocuments />
@@ -130,7 +115,15 @@ const IDCard = ({ pInfo }) => {
           src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${pInfo.profileImage}`}
           alt="Profile"
         />
-        <div className="text-center mt-4">
+        <div className="w-40 h-10 rounded-md overflow-hidden">
+          <img
+            src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${pInfo.signature}`}
+            alt="Your Image"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div className="text-center ">
           <p className="font-bold text-xl w-full">
             {" "}
             {pInfo.firstname + " " + pInfo.middlename + " " + pInfo.lastname}

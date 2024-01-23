@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../ContextApis/MyContext";
 import UploadModal from "../UploadModal";
+import { Notify } from "../../Configuration/Notify";
 
 const QualificationInformation = ({ handleFormSubmit }) => {
   const { userInfo } = useContext(MyContext);
@@ -94,8 +95,10 @@ const QualificationInformation = ({ handleFormSubmit }) => {
           }
         );
         if (response.ok) {
+          Notify("success", "Data Saved Successfully");
           console.log(response);
         } else {
+          Notify("error", "Somthing Went Wrong");
           console.error("API request failed");
         }
       } catch (error) {
@@ -125,8 +128,8 @@ const QualificationInformation = ({ handleFormSubmit }) => {
         </thead>
         <tbody className="mt-2">
           {Object.keys(qualificationData).map((key) => (
-            <tr key={key} className="border">
-              <td className="border p-1">
+            <tr key={key} className="border p-2">
+              <td className="border p-2">
                 <input
                   type="text"
                   className="text-center"
@@ -193,8 +196,8 @@ const QualificationInformation = ({ handleFormSubmit }) => {
             </thead>
             <tbody className="mt-2">
               {Object.keys(uploadedFiles).map((ele, key) => (
-                <tr key={key} className="border">
-                  <td className="border p-1">
+                <tr key={key} className="border p-2">
+                  <td className="border p-3">
                     <input
                       type="text"
                       className="text-center"

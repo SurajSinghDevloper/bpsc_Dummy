@@ -3,6 +3,7 @@ import { getData } from "../../Configuration/ApiCalls";
 import { MyContext } from "../../ContextApis/MyContext";
 import { postData } from "../../Configuration/ApiCalls";
 import { getCookie } from "../../Configuration/Cookies";
+import { Notify } from "../../Configuration/Notify";
 
 const PersonalInformation = ({ saveInfo }) => {
   // const [usrInfo, setUsrInfo] = useState("");
@@ -143,6 +144,7 @@ const PersonalInformation = ({ saveInfo }) => {
             `${process.env.REACT_APP_BASE_URL}/api/v1/user/info/${userData.emailID}`
           );
           if (resData) {
+            Notify("info", "Wait To Retrive Data");
             setUserInfo(resData);
             await setProfileInfo(resData);
           }
@@ -174,7 +176,7 @@ const PersonalInformation = ({ saveInfo }) => {
       fData
     );
     if (res) {
-      alert("PersonalData Saved Successfully");
+      Notify("success", "PersonalData Saved Successfully");
     }
   }
 
@@ -353,8 +355,10 @@ const PersonalInformation = ({ saveInfo }) => {
             <option>Select</option>
             <option value={"GEN"}>GEN</option>
             <option value={"ST"}>ST</option>
-            <option value={"OBC"}>OBC</option>
+            <option value={"OBC"}>BC</option>
             <option value={"SC"}>SC</option>
+            <option value={"EWS"}>EWS</option>
+            <option value={"EBC"}>EBC</option>
             <option value={"OTHER"}>OTHER</option>
           </select>
         </div>

@@ -1,5 +1,5 @@
 import React from "react";
-
+import logo from "../../Assets/bpsc.png";
 const Sidebar = ({ setActivePage }) => {
   return (
     <div className="bg-gray-800 text-white w-64 h-screen fixed left-0 top-0 overflow-y-auto">
@@ -22,12 +22,12 @@ const Sidebar = ({ setActivePage }) => {
         >
           Event List
         </li>
-        <li
+        {/* <li
           className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
           onClick={() => setActivePage("FormCriteria")}
         >
           Form Criteria
-        </li>
+        </li> */}
         <li
           className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
           onClick={() => setActivePage("Payment")}
@@ -68,8 +68,9 @@ const Sidebar = ({ setActivePage }) => {
       </ul>
 
       {/* Sidebar footer */}
-      <div className="absolute bottom-0 w-full py-4">
-        <p className="text-center text-gray-500">© 2024 Company Name</p>
+      <div className="absolute bottom-0 w-full ">
+        <img className="w-full h-20" src={logo} alt="" />
+        {/* <p className="text-center text-gray-500">© 2024 Company Name</p> */}
       </div>
     </div>
   );

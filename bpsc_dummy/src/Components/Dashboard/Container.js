@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import EventList from "./EventList";
 import PaymentForm from "./PaymentForm";
 import FormCriteria from "./FormCriteria";
+import SubmittedForm from "./SubmittedForm";
 
 const Container = ({ activePage, setActivePage }) => {
   const renderPage = () => {
@@ -13,11 +14,11 @@ const Container = ({ activePage, setActivePage }) => {
       case "Event List":
         return <EventList setActivePage={setActivePage} />;
       case "Submitted Form":
-        return <div>OOPS Submitted Form is Under Construction</div>;
+        return <SubmittedForm />;
       case "Payment":
-        return <PaymentForm />;
+        return <PaymentForm setActivePage={setActivePage} />;
       case "FormCriteria":
-        return <FormCriteria />;
+        return <FormCriteria setActivePage={setActivePage} />;
       case "Admit-Card":
         return <div>OOPS Admit-Card Form is Under Construction</div>;
       case "Submitted Form Status":
