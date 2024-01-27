@@ -10,7 +10,7 @@ const PersonalInformation = ({ saveInfo }) => {
   const usr = getCookie("user");
   const userData = JSON.parse(localStorage.getItem("user"));
   const { setUserInfo, setProfileInfo, userInfo } = useContext(MyContext);
-
+  const [messageShown, setMessageShown] = useState(false);
   // const [isDisability, setIsDisability] = useState(false);
   const [aadharNumber, setAadharNumber] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
@@ -67,6 +67,11 @@ const PersonalInformation = ({ saveInfo }) => {
   };
   const handleAadharCheckClick = () => {
     const isValidAadhar = validateAadhar(aadharNumber);
+    if (isValidAadhar) {
+      Notify("Success", "Valid Aadhar No");
+    } else if (!isValidAadhar) {
+      Notify("error", "Not Valid Aadhar No");
+    }
     setValidationMessage(`Is Valid Aadhar Number: ${isValidAadhar}`);
   };
 
@@ -144,9 +149,9 @@ const PersonalInformation = ({ saveInfo }) => {
             `${process.env.REACT_APP_BASE_URL}/api/v1/user/info/${userData.emailID}`
           );
           if (resData) {
-            Notify("info", "Wait To Retrive Data");
             setUserInfo(resData);
             await setProfileInfo(resData);
+            // Notify("info", "Wait To Retrive Data");
           }
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -157,28 +162,37 @@ const PersonalInformation = ({ saveInfo }) => {
     fetchData();
   }, [setUserInfo, setProfileInfo, usr, userData.emailID]);
 
-  // useEffect(() => {
-  //   setUsrInfo(localStorage.getItem("user"));
-  // }, []);
+  useEffect(() => {
+    const handleFormSubmitOnce = async () => {
+      if (saveInfo === true && !messageShown) {
+        const fData = new FormData();
+        for (const key in formData) {
+          if (key !== "document") {
+            fData.append(key, formData[key]);
+          }
+        }
+        const Authorization = localStorage.getItem("token");
+        const res = await fetch(
+          `${process.env.REACT_APP_BASE_URL}/api/v1/user/new-user/info/${userInfo.email}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${Authorization}`,
+            },
+            body: fData,
+          }
+        );
 
-  if (saveInfo === true) {
-    console.log("➡️➡️➡️➡️➡️➡️");
-    const fData = new FormData();
-    for (const key in formData) {
-      console.log("➡️➡️➡️➡️➡️➡️");
-      if (key !== "document") {
-        fData.append(key, formData[key]);
+        if (res.status === 200) {
+          Notify("success", "Personal Data Saved Successfully");
+          // alert("Personal Info Saved Successfully");
+          setMessageShown(true);
+        }
       }
-    }
-    console.log("➡️➡️➡️➡️➡️➡️", fData);
-    const res = postData(
-      `${process.env.REACT_APP_BASE_URL}/api/v1/user/new-user/info/${userInfo.email}`,
-      fData
-    );
-    if (res) {
-      Notify("success", "PersonalData Saved Successfully");
-    }
-  }
+    };
+
+    handleFormSubmitOnce();
+  }, [saveInfo, formData, userInfo.email, messageShown]);
 
   const handleDisabilityChange = (event) => {
     const value = event.target.value === "true";
@@ -201,7 +215,7 @@ const PersonalInformation = ({ saveInfo }) => {
   };
 
   const handleMaritalStatus = (event) => {
-    handleInputChange("maritalStatus", event.target.value);
+    handleInputChange("maritialStatus", event.target.value);
   };
 
   const handleNationalityChange = (event) => {
@@ -273,7 +287,7 @@ const PersonalInformation = ({ saveInfo }) => {
             <option value="Single">Single</option>
             <option value="Married">Married</option>
             <option value="Widows">Widows</option>
-            <option value="Divosed">Divosed</option>
+            <option value="Divorsed">Divorsed</option>
           </select>
         </div>
         <div className="flex items-center mb-4">
@@ -418,30 +432,51 @@ const PersonalInformation = ({ saveInfo }) => {
                   <label htmlFor="input1" className="block mb-1">
                     Disability Type:
                   </label>
-                  <input
-                    type="text"
+                  <select
+                    className="w-full p-2 border rounded-md text-black"
                     id="disabilityType"
-                    value={formData.disablityType}
+                    name="disabilityType"
                     onChange={(e) =>
                       onFormChange("disabilityType", e.target.value)
                     }
-                    className="w-full p-2 border rounded-md"
-                  />
+                  >
+                    <option value="">Select</option>
+                    <option value="Visual_Impairment">Visual Impairment</option>
+                    <option value="Hearing_Impairment">
+                      Hearing Impairment
+                    </option>
+                    <option value="Mobility_Impairment">
+                      Mobility Impairment
+                    </option>
+                    <option value="Cognitive_Or_Intellectual_Disabilities">
+                      Cognitive or Intellectual Disabilities
+                    </option>
+                    <option value="Psychiatric_Or_Mental_Health_Disabilities">
+                      Psychiatric or Mental Health Disabilities
+                    </option>
+                    <option value="Speech_And_Language_Disabilities">
+                      Speech and Language Disabilities
+                    </option>
+                    <option value="Chronic_Health_Conditions">
+                      Chronic Health Conditions
+                    </option>
+                    <option value="OtherTypes">Other Types</option>
+                  </select>
                 </div>
-                <div className="mb-4 mr-2">
+                {/* <div className="mb-4 mr-2">
                   <label htmlFor="input2" className="block mb-1">
                     Disability Remark:
                   </label>
                   <input
                     type="text"
                     id="disabilityRemark"
-                    value={formData.disablityRemark}
+                    value={formData.disablityRemark || ""}
                     onChange={(e) =>
                       onFormChange("disabilityRemark", e.target.value)
                     }
                     className="w-full p-2 border rounded-md"
                   />
-                </div>
+                </div> */}
                 <div className="mb-4">
                   <label htmlFor="input3" className="block mb-1">
                     Document:
@@ -500,6 +535,7 @@ const PersonalInformation = ({ saveInfo }) => {
           <input
             type="text"
             id="email"
+            disabled
             value={formData.email || ""}
             onChange={(e) => onFormChange("email", e.target.value)}
             placeholder="E-mail Id"
@@ -533,9 +569,9 @@ const PersonalInformation = ({ saveInfo }) => {
               className="p-2 border rounded-md mr-2"
             />
           </div>
-          {aadharNumber && validationMessage && (
+          {/* {aadharNumber && validationMessage && (
             <span>{validationMessage}</span>
-          )}
+          )} */}
         </div>
 
         <div className="flex items-center mb-4">

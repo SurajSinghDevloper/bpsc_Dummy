@@ -110,17 +110,21 @@ const IDCard = ({ pInfo }) => {
   return (
     <div className="w-11/12  bg-white rounded-lg flex justify-between ">
       <div>
-        <img
-          className="w-48 h-32 rounded-full mx-auto"
-          src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${pInfo.profileImage}`}
-          alt="Profile"
-        />
-        <div className="w-40 h-10 rounded-md overflow-hidden">
+        {pInfo.profileImage && (
           <img
-            src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${pInfo.signature}`}
-            alt="Your Image"
-            className="w-full h-full object-cover"
+            className="w-48 h-32 rounded-full mx-auto"
+            src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${pInfo.profileImage}`}
+            alt="Profile"
           />
+        )}
+        <div className="w-40 h-10 rounded-md overflow-hidden">
+          {pInfo.signature && (
+            <img
+              src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${pInfo.signature}`}
+              alt="Your Image"
+              className="w-full h-full object-cover"
+            />
+          )}
         </div>
 
         <div className="text-center ">

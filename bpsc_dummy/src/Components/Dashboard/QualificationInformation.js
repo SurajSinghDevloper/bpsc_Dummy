@@ -6,6 +6,7 @@ import { Notify } from "../../Configuration/Notify";
 const QualificationInformation = ({ handleFormSubmit }) => {
   const { userInfo } = useContext(MyContext);
   const [qualificationInfoId, setQualificationInfoId] = useState("");
+  const [messageShown, setMessageShown] = useState(false);
   const [qualificationData, setQualificationData] = useState({
     10: { name: "10", specialization: "", school: "", marks: "", year: "" },
     12: { name: "12", specialization: "", school: "", marks: "", year: "" },
@@ -27,7 +28,7 @@ const QualificationInformation = ({ handleFormSubmit }) => {
     otherDoc: "",
   });
   useEffect(() => {
-    if (Object.keys(userInfo).length > 0) {
+    if (userInfo && userInfo.qualificationDoc) {
       const updatedInfo = {
         tenthDoc: userInfo.qualificationDoc.tenthDoc || "",
         twelethDoc: userInfo.qualificationDoc.twelethDoc || "",
@@ -39,6 +40,7 @@ const QualificationInformation = ({ handleFormSubmit }) => {
       setUploadedFiles(updatedInfo);
     }
   }, [userInfo]);
+
   useEffect(() => {
     if (userInfo.qualificationType && userInfo.qualificationType.length > 0) {
       const initialQualificationData = {};
@@ -69,45 +71,95 @@ const QualificationInformation = ({ handleFormSubmit }) => {
     }));
   };
 
-  if (handleFormSubmit === true) {
-    const handleUserQuali = async () => {
-      const requestData = Object.values(qualificationData).map(
-        ({ name, specialization, school, marks, year }) => ({
-          name,
-          specialization,
-          school,
-          marks,
-          year,
-        })
-      );
+  // let isFormSubmitHandled = false;
 
-      try {
-        const Authorization = localStorage.getItem("token");
-        const response = await fetch(
-          `${process.env.REACT_APP_BASE_URL}/api/qualification-types/qualification?username=${userInfo.username}`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${Authorization}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
+  // if (handleFormSubmit === true && !isFormSubmitHandled) {
+  //   isFormSubmitHandled = true;
+  //   const handleUserQuali = async () => {
+  //     const requestData = Object.values(qualificationData).map(
+  //       ({ name, specialization, school, marks, year }) => ({
+  //         name,
+  //         specialization,
+  //         school,
+  //         marks,
+  //         year,
+  //       })
+  //     );
+
+  //     try {
+  //       const Authorization = localStorage.getItem("token");
+  //       const response = await fetch(
+  //         `${process.env.REACT_APP_BASE_URL}/api/qualification-types/qualification?username=${userInfo.username}`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             Authorization: `Bearer ${Authorization}`,
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify(requestData),
+  //         }
+  //       );
+  //       if (response.ok) {
+  //         Notify("success", "Data Saved Successfully");
+  //         console.log(response);
+  //       } else {
+  //         Notify("error", "Somthing Went Wrong");
+  //         console.error("API request failed");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   handleUserQuali();
+  // }
+
+  useEffect(() => {
+    const handleFormSubmitOnce = async () => {
+      if (handleFormSubmit === true && !messageShown) {
+        const handleUserQuali = async () => {
+          const requestData = Object.values(qualificationData).map(
+            ({ name, specialization, school, marks, year }) => ({
+              name,
+              specialization,
+              school,
+              marks,
+              year,
+            })
+          );
+
+          try {
+            const Authorization = localStorage.getItem("token");
+            const response = await fetch(
+              `${process.env.REACT_APP_BASE_URL}/api/qualification-types/qualification?username=${userInfo.username}`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${Authorization}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestData),
+              }
+            );
+            if (response.ok) {
+              Notify("success", "Data Saved Successfully");
+              console.log(response);
+              setMessageShown(true);
+            } else {
+              Notify("error", "Something Went Wrong");
+              console.error("API request failed");
+            }
+          } catch (error) {
+            console.error("Error:", error);
           }
-        );
-        if (response.ok) {
-          Notify("success", "Data Saved Successfully");
-          console.log(response);
-        } else {
-          Notify("error", "Somthing Went Wrong");
-          console.error("API request failed");
-        }
-      } catch (error) {
-        console.error("Error:", error);
+        };
+
+        await handleUserQuali();
       }
     };
 
-    handleUserQuali();
-  }
+    handleFormSubmitOnce();
+  }, [handleFormSubmit, qualificationData, userInfo, messageShown]);
 
   return (
     <>

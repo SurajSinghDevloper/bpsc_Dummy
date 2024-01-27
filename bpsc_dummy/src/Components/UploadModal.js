@@ -19,6 +19,7 @@ const UploadModal = ({
   const handleDocUpload = async (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
+    console.log(keyName);
     formData.append("pdf", file);
     formData.append("documentType", keyName);
     formData.append("username", userInfo.username);

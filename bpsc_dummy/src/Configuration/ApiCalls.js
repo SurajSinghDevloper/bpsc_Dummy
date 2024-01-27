@@ -64,6 +64,7 @@ export const postData = async (url, data) => {
       body: data,
     });
     console.log(Authorization);
+
     if (!response.ok) {
       // Handle non-successful responses
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -72,7 +73,7 @@ export const postData = async (url, data) => {
     const responseData = await response.json();
     return responseData;
   } catch (error) {
-    Notify("error", "Somthing Went Wrong");
+    // Notify("error", "Somthing Went Wrong");
     console.error("Error making POST request:", error.message);
     throw error;
   }

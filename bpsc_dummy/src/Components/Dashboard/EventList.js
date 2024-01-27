@@ -48,9 +48,6 @@ const EventList = ({ setActivePage }) => {
     // Now you have the selected vacancy data, you can perform further actions
     console.log("Selected Vacancy:", selectedVacancy);
 
-    // Example: Redirect to a new page with vacancy details
-    // setActivePage("VacancyDetails", { vacancy: selectedVacancy });
-
     setSelectedVacancy(selectedVacancy);
     if (!vacancies[index].criteria) {
       createFormCriteria(index);

@@ -67,7 +67,6 @@ const Home = () => {
 
     try {
       if (isValid) {
-        Notify("warning", "Captcha is validated!");
         if (emailID !== "" || password !== "") {
           const resData = await loginPost(
             `${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`,
