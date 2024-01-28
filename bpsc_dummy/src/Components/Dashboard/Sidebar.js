@@ -44,7 +44,7 @@ const Sidebar = ({ setActivePage }) => {
           className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
           onClick={() => setActivePage("Submitted Form Status")}
         >
-          Submitted Form Status{" "}
+          Submitted Form Status
         </li>
         <li
           className="px-4 py-2 hover:bg-gray-700 cursor-pointer"

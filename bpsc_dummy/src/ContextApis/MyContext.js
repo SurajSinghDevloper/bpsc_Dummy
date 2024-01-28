@@ -13,6 +13,8 @@ const MyContextProvider = ({ children }) => {
   const [profileIfo, setProfileInfo] = useState("");
   const [selectedVacancy, setSelectedVacancy] = useState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
+  const [signature, setSignature] = useState("");
   const [formCriteria, setFormCriteria] = useState("");
 
   const updateValue = (newValue) => {
@@ -39,6 +41,10 @@ const MyContextProvider = ({ children }) => {
         formCriteria,
         setFormCriteria,
         isAuthenticated,
+        profileImage,
+        setProfileImage,
+        signature,
+        setSignature,
         setIsAuthenticated,
       }}
     >

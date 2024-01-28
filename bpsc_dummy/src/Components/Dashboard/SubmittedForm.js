@@ -1,9 +1,45 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../ContextApis/MyContext";
+import { Notify } from "../../Configuration/Notify";
+import useRazorpay from "react-razorpay";
 
-const SubmittedForm = () => {
+const SubmittedForm = ({ setActivePage }) => {
   const { userInfo } = useContext(MyContext);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [appliedData, setAppliedData] = useState([]);
+  const [Razorpay, _] = useRazorpay();
+
+  const pay = async (orderId, paymentAmount) => {
+    if (isLoaded && orderId) {
+      const options = {
+        key: "rzp_test_VFuNBAwLFlcO6m",
+        amount: parseInt(paymentAmount) * 100, // Multiply by 100 for paise
+        currency: "INR",
+        name: "UMU",
+        description: "Payment for something",
+        order_id: orderId,
+        handler: function (response) {
+          if (response.razorpay_payment_id) {
+            Notify("success", "Payment Successful");
+          } else {
+            Notify("error", "Payment Failed");
+          }
+        },
+        prefill: {
+          name: `${userInfo.firstname} ${userInfo.lastname}`,
+          email: userInfo.email,
+          contact: userInfo.contactNumber,
+        },
+        notes: {},
+        theme: {
+          color: "#F37254",
+        },
+      };
+
+      const rzp = new Razorpay(options); // Using the Razorpay class
+      rzp.open();
+    }
+  };
 
   useEffect(() => {
     const fetchAppliedData = async () => {
@@ -19,7 +55,7 @@ const SubmittedForm = () => {
           }
         );
 
-        if (response.status === 200) {
+        if (response.ok) {
           const data = await response.json();
           setAppliedData(data);
         } else {
@@ -32,6 +68,11 @@ const SubmittedForm = () => {
 
     fetchAppliedData();
   }, [userInfo]);
+
+  const handleIsPayment = async (form) => {
+    setIsLoaded(true);
+    await pay(form.orderId, form.paymentAmount);
+  };
 
   return (
     <div className="mt-10 ml-10">
@@ -54,10 +95,27 @@ const SubmittedForm = () => {
               <td className="py-2 px-4 border border-r border-black">
                 {form.appliedFor}
               </td>
-              <td className="py-2 px-4 border border-r border-black w-1/4">
-                {form.isCompleted === "Y" ? "Approved" : "Pending"}
+              <td className="py-2 px-4 border border-r text-center border-black w-1/4">
+                {form.isCompleted === "Y" ? "Submitted" : "Pending"}
               </td>
-              <td className="py-2 px-4">{form.paymentStatus}</td>
+              <td
+                className={`py-2 px-4 border-t text-center ${
+                  form.paymentStatus === "ND"
+                    ? "border-black"
+                    : "bg-green-500 text-white"
+                }`}
+              >
+                {form.paymentStatus === "ND" ? (
+                  <button
+                    className="bg-red-400 text-white p-2 rounded-lg w-full"
+                    onClick={() => handleIsPayment(form)}
+                  >
+                    Go To Payment
+                  </button>
+                ) : (
+                  "Approved"
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

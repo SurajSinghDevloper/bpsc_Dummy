@@ -7,7 +7,7 @@ import { faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { MyContext } from "../../ContextApis/MyContext";
 
 const Profile = (props) => {
-  const { userInfo } = useContext(MyContext);
+  const { userInfo, profileImage, signature } = useContext(MyContext);
   const [savePersonalInfo, setSavePersonalInfo] = useState(false);
   const [handleFormSubmitQualification, setHandleFormSubmitQualification] =
     useState(false);
@@ -33,7 +33,11 @@ const Profile = (props) => {
             marginTop: "10px",
           }}
         >
-          <IDCard pInfo={userInfo} />
+          <IDCard
+            pInfo={userInfo}
+            profileImage={profileImage}
+            signature={signature}
+          />
         </div>
         <hr className="text-black" />
         <div className="flex justify-between items-center bg-slate-200 p-1">
@@ -106,21 +110,26 @@ const Profile = (props) => {
   );
 };
 
-const IDCard = ({ pInfo }) => {
+const IDCard = ({ pInfo, profileImage, signature }) => {
+  console.log(profileImage);
   return (
     <div className="w-11/12  bg-white rounded-lg flex justify-between ">
       <div>
         {pInfo.profileImage && (
           <img
             className="w-48 h-32 rounded-full mx-auto"
-            src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${pInfo.profileImage}`}
+            src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${
+              profileImage ? profileImage : pInfo.profileImage
+            }`}
             alt="Profile"
           />
         )}
         <div className="w-40 h-10 rounded-md overflow-hidden">
           {pInfo.signature && (
             <img
-              src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${pInfo.signature}`}
+              src={`${process.env.REACT_APP_BASE_URL}/api/files/view/${
+                signature ? signature : pInfo.signature
+              }`}
               alt="Your Image"
               className="w-full h-full object-cover"
             />

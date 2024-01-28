@@ -14,7 +14,7 @@ const UploadModal = ({
   deleteUrl,
   idToDelete,
 }) => {
-  const { userInfo } = useContext(MyContext);
+  const { userInfo, setProfileImage, setSignature } = useContext(MyContext);
 
   const handleDocUpload = async (e) => {
     const file = e.target.files[0];
@@ -38,6 +38,13 @@ const UploadModal = ({
         ...prevFormData,
         [keyName]: resText,
       }));
+      if (resText.startsWith("profileImage_")) {
+        console.log(resText);
+        setProfileImage(resText);
+      }
+      if (resText.startsWith("signatureImage_")) {
+        setSignature(resText);
+      }
     }
   };
 
@@ -48,6 +55,13 @@ const UploadModal = ({
       formData.append("documentType", keyName);
       formData.append("filename", fileToView);
       const Authorization = localStorage.getItem("token");
+      if (keyName.startsWith("profileImage")) {
+        console.log(keyName);
+        setProfileImage("");
+      }
+      if (keyName.startsWith("signatureImage")) {
+        setSignature("");
+      }
       const response = await fetch(process.env.REACT_APP_BASE_URL + deleteUrl, {
         method: "POST",
         headers: {

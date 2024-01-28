@@ -6,27 +6,27 @@ const CandidateDocuments = () => {
   const { userInfo } = useContext(MyContext);
 
   const [uploadedFiles, setUploadedFiles] = useState({
-    "Photo Of Candidate": null,
-    "Signature Of Candidate": null,
-    "Aadhar Card": null,
-    "Domicile Certificate": null,
-    "Income Certificate": null,
-    "Cast Certificate": null,
-    "Birt Certificate": null,
-    "Other Relivant Doc": null,
+    profileImage: null,
+    signature: null,
+    aadharDoc: null,
+    domicileDoc: null,
+    incomeProfDoc: null,
+    castProfDoc: null,
+    birthDoc: null,
+    otherDoc: null,
   });
 
   useEffect(() => {
     if (Object.keys(userInfo).length > 0) {
       const newObj = {
-        "Photo Of Candidate": userInfo.profileImage,
-        "Signature Of Candidate": userInfo.signature,
-        "Aadhar Card": userInfo.aadharDoc,
-        "Domicile Certificate": userInfo.domicileDoc,
-        "Income Certificate": userInfo.incomeProfDoc,
-        "Cast Certificate": userInfo.castProfDoc,
-        "Birt Certificate": userInfo.birthDoc,
-        "Other Relivant Doc": userInfo.otherDoc,
+        profileImage: userInfo.profileImage,
+        signatureImage: userInfo.signature,
+        aadharDoc: userInfo.aadharDoc,
+        domicileDoc: userInfo.domicileDoc,
+        incomeProfDoc: userInfo.incomeProfDoc,
+        castProfDoc: userInfo.castProfDoc,
+        birthDoc: userInfo.birthDoc,
+        otherDoc: userInfo.otherDoc,
       };
       setUploadedFiles(newObj);
     }

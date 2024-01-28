@@ -14,7 +14,7 @@ const Container = ({ activePage, setActivePage }) => {
       case "Event List":
         return <EventList setActivePage={setActivePage} />;
       case "Submitted Form":
-        return <SubmittedForm />;
+        return <SubmittedForm setActivePage={setActivePage} />;
       case "Payment":
         return <PaymentForm setActivePage={setActivePage} />;
       case "FormCriteria":

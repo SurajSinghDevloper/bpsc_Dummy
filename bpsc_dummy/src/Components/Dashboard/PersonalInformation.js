@@ -12,13 +12,13 @@ const PersonalInformation = ({ saveInfo }) => {
   const { setUserInfo, setProfileInfo, userInfo } = useContext(MyContext);
   const [messageShown, setMessageShown] = useState(false);
   // const [isDisability, setIsDisability] = useState(false);
-  const [aadharNumber, setAadharNumber] = useState("");
+  const [aadharNo, setaadharNo] = useState("");
   const [validationMessage, setValidationMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAadharNumberChange = (event) => {
+  const handleaadharNoChange = (event) => {
     const value = event.target.value;
-    setAadharNumber(value);
+    setaadharNo(value);
   };
   const validateAadhar = (aadhar) => {
     const d = [
@@ -66,7 +66,7 @@ const PersonalInformation = ({ saveInfo }) => {
     return inv[c] === 0;
   };
   const handleAadharCheckClick = () => {
-    const isValidAadhar = validateAadhar(aadharNumber);
+    const isValidAadhar = validateAadhar(aadharNo);
     if (isValidAadhar) {
       Notify("Success", "Valid Aadhar No");
     } else if (!isValidAadhar) {
@@ -98,7 +98,7 @@ const PersonalInformation = ({ saveInfo }) => {
     lastname: "",
     email: userInfo.email,
     nationality: "",
-    aadharNo: aadharNumber,
+    aadharNo: "",
     pincode: "",
     religion: "",
     identification: "",
@@ -151,6 +151,10 @@ const PersonalInformation = ({ saveInfo }) => {
           if (resData) {
             setUserInfo(resData);
             await setProfileInfo(resData);
+            if (resData.aadharNo) {
+              setaadharNo(resData.aadharNo);
+            }
+            setUserInfo(resData);
             // Notify("info", "Wait To Retrive Data");
           }
         } catch (error) {
@@ -171,6 +175,9 @@ const PersonalInformation = ({ saveInfo }) => {
             fData.append(key, formData[key]);
           }
         }
+        console.log(aadharNo);
+        fData.append("aadharNo", aadharNo);
+        console.log(fData);
         const Authorization = localStorage.getItem("token");
         const res = await fetch(
           `${process.env.REACT_APP_BASE_URL}/api/v1/user/new-user/info/${userInfo.email}`,
@@ -441,26 +448,14 @@ const PersonalInformation = ({ saveInfo }) => {
                     }
                   >
                     <option value="">Select</option>
-                    <option value="Visual_Impairment">Visual Impairment</option>
-                    <option value="Hearing_Impairment">
-                      Hearing Impairment
+                    <option value="Visually Disabled">Visually Disabled</option>
+                    <option value="Hearing Disabled">Hearing Disabled</option>
+                    <option value="Orthopedically Disabled">
+                      Orthopedically Disabled
                     </option>
-                    <option value="Mobility_Impairment">
-                      Mobility Impairment
+                    <option value="Mentally Disabled/Multiple Disabled">
+                      Mentally Disabled/Multiple Disabled
                     </option>
-                    <option value="Cognitive_Or_Intellectual_Disabilities">
-                      Cognitive or Intellectual Disabilities
-                    </option>
-                    <option value="Psychiatric_Or_Mental_Health_Disabilities">
-                      Psychiatric or Mental Health Disabilities
-                    </option>
-                    <option value="Speech_And_Language_Disabilities">
-                      Speech and Language Disabilities
-                    </option>
-                    <option value="Chronic_Health_Conditions">
-                      Chronic Health Conditions
-                    </option>
-                    <option value="OtherTypes">Other Types</option>
                   </select>
                 </div>
                 {/* <div className="mb-4 mr-2">
@@ -479,7 +474,7 @@ const PersonalInformation = ({ saveInfo }) => {
                 </div> */}
                 <div className="mb-4">
                   <label htmlFor="input3" className="block mb-1">
-                    Document:
+                    If Any Certificate Document:
                   </label>
                   <input
                     type="file"
@@ -562,14 +557,14 @@ const PersonalInformation = ({ saveInfo }) => {
             <input
               type="text"
               id="aadharNo"
-              value={aadharNumber}
-              onChange={handleAadharNumberChange}
+              value={aadharNo}
+              onChange={handleaadharNoChange}
               onBlur={handleAadharCheckClick}
               placeholder="Aadhar No"
               className="p-2 border rounded-md mr-2"
             />
           </div>
-          {/* {aadharNumber && validationMessage && (
+          {/* {aadharNo && validationMessage && (
             <span>{validationMessage}</span>
           )} */}
         </div>

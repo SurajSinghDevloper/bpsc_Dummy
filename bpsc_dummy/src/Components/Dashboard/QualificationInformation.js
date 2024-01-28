@@ -28,6 +28,7 @@ const QualificationInformation = ({ handleFormSubmit }) => {
     otherDoc: "",
   });
   useEffect(() => {
+    console.log(userInfo);
     if (userInfo && userInfo.qualificationDoc) {
       const updatedInfo = {
         tenthDoc: userInfo.qualificationDoc.tenthDoc || "",
